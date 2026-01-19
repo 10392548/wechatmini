@@ -1,0 +1,19 @@
+{
+  "name": "wechatmini",
+  "version": "1.0.0",
+  "main": ".eslintrc.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@babel/runtime": "^7.28.6",
+    "tdesign-miniprogram": "^1.12.1"
+  }
+}

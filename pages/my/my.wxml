@@ -1,0 +1,75 @@
+<!--pages/my/my.wxml-->
+<navigation-bar title="我的" back="{{false}}" color="black" background="#FFF"></navigation-bar>
+<scroll-view class="page-content" scroll-y show-scrollbar="{{false}}">
+  <!-- 个人信息卡片 -->
+  <view class="profile-card">
+    <view class="profile-header">
+      <image class="profile-avatar" src="/images/pet.png" mode="aspectFill"></image>
+      <view class="profile-info">
+        <view class="profile-name">{{userInfo.name}}</view>
+        <view class="profile-id">ID: {{userInfo.id}}</view>
+      </view>
+      <view class="edit-btn" bindtap="editProfile">
+        <text>编辑资料</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 快捷功能 -->
+  <view class="section-card">
+    <view class="section-title">快捷功能</view>
+    <view class="menu-list">
+      <view class="menu-item" wx:for="{{features}}" wx:key="id" bindtap="onFeatureTap" data-url="{{item.url}}">
+        <view class="menu-icon" style="background: {{item.color}}">
+          <image class="icon-img" src="{{item.icon}}" mode="aspectFit"></image>
+        </view>
+        <text class="menu-name">{{item.name}}</text>
+        <text class="menu-arrow">></text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 已绑定设备 -->
+  <view class="section-card" wx:if="{{devices.length > 0}}">
+    <view class="section-title">已绑定设备</view>
+    <view class="device-list">
+      <view class="device-item" wx:for="{{devices}}" wx:key="imei">
+        <view class="device-icon">📱</view>
+        <view class="device-info">
+          <text class="device-name">设备 {{index + 1}}</text>
+          <text class="device-imei">IMEI: {{item.imei}}</text>
+        </view>
+        <text class="device-time">{{item.bindTime}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 设置选项 -->
+  <view class="section-card">
+    <view class="section-title">设置</view>
+    <view class="menu-list">
+      <view class="menu-item" bindtap="goToPrivacy">
+        <view class="menu-icon" style="background: #FFF3E0">
+          <image class="icon-img" src="/images/privacy.png" mode="aspectFit"></image>
+        </view>
+        <text class="menu-name">隐私设置</text>
+        <text class="menu-arrow">></text>
+      </view>
+      <view class="menu-item" bindtap="goToAbout">
+        <view class="menu-icon" style="background: #FFF3E0">
+          <image class="icon-img" src="/images/about.png" mode="aspectFit"></image>
+        </view>
+        <text class="menu-name">关于我们</text>
+        <text class="menu-arrow">></text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 退出登录 -->
+  <view class="logout-btn" bindtap="logout">
+    <text>退出登录</text>
+  </view>
+
+  <!-- 底部间距 -->
+  <view style="height: 40rpx;"></view>
+</scroll-view>

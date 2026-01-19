@@ -1,0 +1,31 @@
+<!--chat.wxml-->
+<navigation-bar title="AI聊天" back="{{false}}" color="black" background="#FFF"></navigation-bar>
+<view class="page-content">
+  <view class="header">
+    <view class="avatar">🐕</view>
+    <view class="info">
+      <text class="name">豆包（AI 宠物）</text>
+      <text class="status">在线中·在家开心</text>
+    </view>
+  </view>
+
+  <view class="chat-area">
+    <view class="chat-list">
+      <view wx:for="{{messages}}" wx:key="index" class="message-item {{item.type}}">
+        <view class="message-avatar">{{item.type === 'pet' ? '🐕' : '👤'}}</view>
+        <view class="message-content">
+          <text class="message-sender">{{item.sender}}</text>
+          <view class="message-bubble {{item.type}}">
+            <view class="message-text">{{item.content}}</view>
+          </view>
+          <text class="message-time">{{item.time}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="input-bar">
+    <input class="input" placeholder="给豆包留言..." value="{{inputText}}" bindinput="onInput" />
+    <view class="send-btn" bindtap="sendMessage">➤</view>
+  </view>
+</view>

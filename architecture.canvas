@@ -1,0 +1,472 @@
+{
+  "nodes": [
+    {
+      "id": "entry_miniprogram",
+      "type": "text",
+      "text": "**微信小程序入口层**\n`pages/`, `app.js`, `app.json`\n\n**核心职责**: 用户界面层，提供宠物管理、AI聊天、朋友圈等交互界面\n\n**关键页面**:\n- login (登录)\n- index (首页)\n- bind (设备绑定)\n- chat (AI聊天)\n- moments (朋友圈)\n- my (个人中心)\n- profile (个人资料)\n\n**关键交互**:\n- **调用**: API 请求封装层\n- **被用于**: 终端用户交互\n\n**复杂度评估**: Medium\n**架构特点**: 📱 Skyline 渲染引擎 + 自定义导航栏",
+      "x": -800,
+      "y": -400,
+      "width": 320,
+      "height": 280,
+      "color": "1"
+    },
+    {
+      "id": "api_layer_miniprogram",
+      "type": "text",
+      "text": "**API 调用层**\n`api/index.js`, `api/auth.js`, `api/pet.js`, `api/moment.js`, `api/chat.js`\n\n**核心职责**: 封装所有后端 API 调用，提供统一的接口给页面层使用\n\n**关键交互**:\n- **调用**: 请求封装层\n- **被用于**: 所有页面组件\n\n**复杂度评估**: Low\n**设计模式**: 🎯 模块化 API 设计",
+      "x": -800,
+      "y": -80,
+      "width": 320,
+      "height": 240,
+      "color": "2"
+    },
+    {
+      "id": "request_layer",
+      "type": "text",
+      "text": "**请求封装核心**\n`utils/request.js`, `utils/token.js`, `config/index.js`\n\n**核心职责**: 统一请求封装、Token 自动刷新、请求重试、错误处理\n\n**关键交互**:\n- **调用**: 后端 API 服务\n- **被用于**: API 调用层\n\n**复杂度评估**: High\n**核心特性**: 🔄 自动刷新 + 🔁 指数退避重试 + 🔐 Token 管理",
+      "x": -800,
+      "y": 240,
+      "width": 320,
+      "height": 260,
+      "color": "3"
+    },
+    {
+      "id": "backend_entry",
+      "type": "text",
+      "text": "**后端服务入口**\n`server/src/index.ts`\n\n**核心职责**: Express 应用初始化、数据库连接、路由注册、中间件配置\n\n**关键交互**:\n- **调用**: 数据库连接、路由模块\n- **被用于**: 小程序请求层\n\n**复杂度评估**: Medium\n**技术栈**: ⚡ Express + TypeScript + TypeORM",
+      "x": -400,
+      "y": 240,
+      "width": 320,
+      "height": 240,
+      "color": "4"
+    },
+    {
+      "id": "auth_routes",
+      "type": "text",
+      "text": "**认证路由层**\n`server/src/routes/auth.ts`\n\n**核心职责**: 处理微信登录、Token 生成与刷新\n\n**关键交互**:\n- **调用**: JWT 工具、User 实体\n- **被用于**: 所有需要认证的请求\n\n**复杂度评估**: Medium\n**安全机制**: 🔐 JWT (Access + Refresh Token)",
+      "x": 0,
+      "y": -400,
+      "width": 300,
+      "height": 220,
+      "color": "5"
+    },
+    {
+      "id": "pet_routes",
+      "type": "text",
+      "text": "**宠物管理路由**\n`server/src/routes/pet.ts`\n\n**核心职责**: 宠物 CRUD 操作\n\n**关键交互**:\n- **调用**: Pet 实体、认证中间件\n- **被用于**: 宠物管理页面\n\n**复杂度评估**: Low\n**业务逻辑**: 🐕 一用户多宠物",
+      "x": 0,
+      "y": -120,
+      "width": 300,
+      "height": 200,
+      "color": "5"
+    },
+    {
+      "id": "device_routes",
+      "type": "text",
+      "text": "**设备管理路由**\n`server/src/routes/device.ts`\n\n**核心职责**: 设备绑定、解绑、状态更新\n\n**关键交互**:\n- **调用**: Device/Pet 实体\n- **被用于**: 设备绑定页面\n\n**复杂度评估**: Medium\n**约束规则**: ⚠️ 一设备一宠物，不可多用户绑定",
+      "x": 0,
+      "y": 120,
+      "width": 300,
+      "height": 220,
+      "color": "5"
+    },
+    {
+      "id": "moment_routes",
+      "type": "text",
+      "text": "**朋友圈路由**\n`server/src/routes/moment.ts`\n\n**核心职责**: 朋友圈发布、点赞、评论功能\n\n**关键交互**:\n- **调用**: Moment/MomentLike/MomentComment 实体、图片上传中间件\n- **被用于**: 朋友圈页面\n\n**复杂度评估**: High\n**功能特性**: 📸 支持9张图片 + 💬 评论系统",
+      "x": 0,
+      "y": 380,
+      "width": 300,
+      "height": 240,
+      "color": "5"
+    },
+    {
+      "id": "chat_routes",
+      "type": "text",
+      "text": "**AI 聊天路由**\n`server/src/routes/chat.ts`\n\n**核心职责**: AI 对话处理、聊天历史管理\n\n**关键交互**:\n- **调用**: ChatMessage 实体、DeepSeek API\n- **被用于**: AI 聊天页面\n\n**复杂度评估**: High\n**AI 特性**: 🤖 上下文记忆 + 💾 永久存储",
+      "x": 0,
+      "y": 660,
+      "width": 300,
+      "height": 220,
+      "color": "5"
+    },
+    {
+      "id": "user_routes",
+      "type": "text",
+      "text": "**用户管理路由**\n`server/src/routes/user.ts`\n\n**核心职责**: 用户资料查询与更新\n\n**关键交互**:\n- **调用**: User 实体、认证中间件\n- **被用于**: 个人中心、个人资料页面\n\n**复杂度评估**: Low\n**功能**: 👤 获取/更新用户信息",
+      "x": 0,
+      "y": 920,
+      "width": 300,
+      "height": 200,
+      "color": "5"
+    },
+    {
+      "id": "upload_routes",
+      "type": "text",
+      "text": "**图片上传路由**\n`server/src/routes/upload.ts`\n\n**核心职责**: 处理单张/多张图片上传\n\n**关键交互**:\n- **调用**: 上传中间件、认证中间件\n- **被用于**: 个人资料、朋友圈页面\n\n**复杂度评估**: Low\n**限制**: 📸 单次最多9张图片",
+      "x": 0,
+      "y": 1160,
+      "width": 300,
+      "height": 200,
+      "color": "5"
+    },
+    {
+      "id": "middleware_auth",
+      "type": "text",
+      "text": "**认证中间件**\n`server/src/middleware/auth.ts`\n\n**核心职责**: JWT Token 验证、用户身份识别\n\n**关键交互**:\n- **调用**: JWT 工具\n- **被用于**: 所有受保护的路由\n\n**复杂度评估**: Low\n**安全级别**: 🛡️ 401 自动拦截",
+      "x": 360,
+      "y": -400,
+      "width": 280,
+      "height": 200,
+      "color": "6"
+    },
+    {
+      "id": "middleware_upload",
+      "type": "text",
+      "text": "**图片上传中间件**\n`server/src/middleware/upload.ts`\n\n**核心职责**: 图片文件上传处理、格式验证、存储管理\n\n**关键交互**:\n- **调用**: Multer 库\n- **被用于**: 朋友圈创建\n\n**复杂度评估**: Low\n**存储策略**: 💾 本地存储 (server/uploads/)",
+      "x": 360,
+      "y": -160,
+      "width": 280,
+      "height": 220,
+      "color": "6"
+    },
+    {
+      "id": "utils_jwt",
+      "type": "text",
+      "text": "**JWT 工具**\n`server/src/utils/jwt.ts`\n\n**核心职责**: Token 生成、验证、刷新逻辑\n\n**关键交互**:\n- **调用**: jsonwebtoken 库\n- **被用于**: 认证路由、认证中间件\n\n**复杂度评估**: Low\n**Token 策略**: ⏱️ Access(2h) + Refresh(7d)",
+      "x": 360,
+      "y": 80,
+      "width": 280,
+      "height": 220,
+      "color": "6"
+    },
+    {
+      "id": "utils_deepseek",
+      "type": "text",
+      "text": "**DeepSeek AI 集成**\n`server/src/utils/deepseek.ts`\n\n**核心职责**: 调用 DeepSeek API 进行 AI 对话\n\n**关键交互**:\n- **调用**: DeepSeek API (外部服务)\n- **被用于**: AI 聊天路由\n\n**复杂度评估**: Medium\n**API 配置**: 🔑 sk-5ec927311bb94d5b8fcda65bec87326d",
+      "x": 360,
+      "y": 340,
+      "width": 280,
+      "height": 220,
+      "color": "6"
+    },
+    {
+      "id": "entities_layer",
+      "type": "text",
+      "text": "**数据实体层**\n`server/src/entities/`\n\n**核心职责**: TypeORM 实体定义，映射数据库表结构\n\n**包含实体**:\n- User (用户)\n- Pet (宠物)\n- Device (设备)\n- Moment (朋友圈)\n- MomentLike (点赞)\n- MomentComment (评论)\n- ChatMessage (聊天记录)\n- ActivityData (运动数据)\n- GrowthLog (成长日志)\n\n**复杂度评估**: Medium\n**关系设计**: 🔗 User 1:N Pet, Pet 1:1 Device",
+      "x": 700,
+      "y": -200,
+      "width": 340,
+      "height": 360,
+      "color": "1"
+    },
+    {
+      "id": "database",
+      "type": "text",
+      "text": "**MySQL 数据库**\n`pet_app @ 127.0.0.1:3307`\n\n**核心职责**: 数据持久化存储\n\n**表结构**: 9张核心表\n- users\n- pets\n- devices\n- moments\n- moment_likes\n- moment_comments\n- chat_messages\n- activity_data\n- growth_logs\n\n**复杂度评估**: Medium\n**数据完整性**: ✅ 外键约束 + 级联删除",
+      "x": 700,
+      "y": 240,
+      "width": 340,
+      "height": 340,
+      "color": "4"
+    },
+    {
+      "id": "external_deepseek",
+      "type": "text",
+      "text": "**DeepSeek API**\n`https://api.deepseek.com`\n\n**核心职责**: 提供 AI 对话能力\n\n**模型**: deepseek-chat\n**特性**: 上下文理解、自然语言生成\n\n**复杂度评估**: External Service\n**集成方式**: 🌐 REST API",
+      "x": 700,
+      "y": 640,
+      "width": 340,
+      "height": 200,
+      "color": "3"
+    },
+    {
+      "id": "config",
+      "type": "text",
+      "text": "**配置中心**\n`server/src/config.ts`\n\n**核心职责**: 集中管理所有配置参数\n\n**配置项**:\n- 数据库连接\n- JWT 密钥\n- DeepSeek API Key\n- 服务器端口\n- 上传路径\n\n**复杂度评估**: Low\n**安全提示**: ⚠️ 生产环境需更换密钥",
+      "x": -400,
+      "y": 560,
+      "width": 320,
+      "height": 260,
+      "color": "2"
+    },
+    {
+      "id": "architecture_pattern",
+      "type": "text",
+      "text": "**架构模式识别**\n\n**主要模式**: 分层架构 (Layered Architecture)\n**置信度**: 0.92\n\n**架构特征**:\n- 📱 前端：微信小程序 (Skyline)\n- 🔌 API 层：RESTful 接口\n- 💼 业务层：路由 + 服务逻辑\n- 💾 数据层：TypeORM + MySQL\n\n**次要模式**: 微服务倾向 (0.15)\n- 模块化的 API 设计\n- 独立的功能路由\n\n**技术债务**: Low\n**可维护性**: High",
+      "x": -800,
+      "y": 560,
+      "width": 340,
+      "height": 320,
+      "color": "5"
+    },
+    {
+      "id": "data_flow_core",
+      "type": "text",
+      "text": "**核心数据流路径**\n\n**用户请求流**:\n1. 小程序页面 → API 调用层\n2. 请求封装 (Token + 重试)\n3. 后端路由 (认证中间件)\n4. 业务逻辑处理\n5. 数据库操作 (TypeORM)\n6. 响应返回 (统一格式)\n\n**AI 对话流**:\n1. 用户消息 → Chat API\n2. 保存用户消息到数据库\n3. 获取历史上下文\n4. 调用 DeepSeek API\n5. 保存 AI 回复\n6. 返回对话结果\n\n**关键特性**: 🔄 自动重试 + 🔐 Token 刷新",
+      "x": -400,
+      "y": -400,
+      "width": 340,
+      "height": 380,
+      "color": "3"
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge_1",
+      "fromNode": "entry_miniprogram",
+      "fromSide": "bottom",
+      "toNode": "api_layer_miniprogram",
+      "toSide": "top",
+      "label": "页面调用"
+    },
+    {
+      "id": "edge_2",
+      "fromNode": "api_layer_miniprogram",
+      "fromSide": "bottom",
+      "toNode": "request_layer",
+      "toSide": "top",
+      "label": "API 封装"
+    },
+    {
+      "id": "edge_3",
+      "fromNode": "request_layer",
+      "fromSide": "right",
+      "toNode": "backend_entry",
+      "toSide": "left",
+      "label": "HTTP 请求"
+    },
+    {
+      "id": "edge_4",
+      "fromNode": "backend_entry",
+      "fromSide": "top",
+      "toNode": "auth_routes",
+      "toSide": "left",
+      "label": "路由注册"
+    },
+    {
+      "id": "edge_5",
+      "fromNode": "backend_entry",
+      "fromSide": "top",
+      "toNode": "pet_routes",
+      "toSide": "left",
+      "label": "路由注册"
+    },
+    {
+      "id": "edge_6",
+      "fromNode": "backend_entry",
+      "fromSide": "top",
+      "toNode": "device_routes",
+      "toSide": "left",
+      "label": "路由注册"
+    },
+    {
+      "id": "edge_7",
+      "fromNode": "backend_entry",
+      "fromSide": "top",
+      "toNode": "moment_routes",
+      "toSide": "left",
+      "label": "路由注册"
+    },
+    {
+      "id": "edge_8",
+      "fromNode": "backend_entry",
+      "fromSide": "top",
+      "toNode": "chat_routes",
+      "toSide": "left",
+      "label": "路由注册"
+    },
+    {
+      "id": "edge_9",
+      "fromNode": "auth_routes",
+      "fromSide": "right",
+      "toNode": "middleware_auth",
+      "toSide": "left",
+      "label": "使用"
+    },
+    {
+      "id": "edge_10",
+      "fromNode": "auth_routes",
+      "fromSide": "right",
+      "toNode": "utils_jwt",
+      "toSide": "left",
+      "label": "Token 生成"
+    },
+    {
+      "id": "edge_11",
+      "fromNode": "pet_routes",
+      "fromSide": "right",
+      "toNode": "middleware_auth",
+      "toSide": "left",
+      "label": "认证"
+    },
+    {
+      "id": "edge_12",
+      "fromNode": "device_routes",
+      "fromSide": "right",
+      "toNode": "middleware_auth",
+      "toSide": "left",
+      "label": "认证"
+    },
+    {
+      "id": "edge_13",
+      "fromNode": "moment_routes",
+      "fromSide": "right",
+      "toNode": "middleware_auth",
+      "toSide": "left",
+      "label": "认证"
+    },
+    {
+      "id": "edge_14",
+      "fromNode": "moment_routes",
+      "fromSide": "right",
+      "toNode": "middleware_upload",
+      "toSide": "left",
+      "label": "图片上传"
+    },
+    {
+      "id": "edge_15",
+      "fromNode": "chat_routes",
+      "fromSide": "right",
+      "toNode": "middleware_auth",
+      "toSide": "left",
+      "label": "认证"
+    },
+    {
+      "id": "edge_16",
+      "fromNode": "chat_routes",
+      "fromSide": "right",
+      "toNode": "utils_deepseek",
+      "toSide": "left",
+      "label": "AI 调用"
+    },
+    {
+      "id": "edge_17",
+      "fromNode": "middleware_auth",
+      "fromSide": "bottom",
+      "toNode": "utils_jwt",
+      "toSide": "top",
+      "label": "Token 验证"
+    },
+    {
+      "id": "edge_18",
+      "fromNode": "auth_routes",
+      "fromSide": "right",
+      "toNode": "entities_layer",
+      "toSide": "left",
+      "label": "User 实体"
+    },
+    {
+      "id": "edge_19",
+      "fromNode": "pet_routes",
+      "fromSide": "right",
+      "toNode": "entities_layer",
+      "toSide": "left",
+      "label": "Pet 实体"
+    },
+    {
+      "id": "edge_20",
+      "fromNode": "device_routes",
+      "fromSide": "right",
+      "toNode": "entities_layer",
+      "toSide": "left",
+      "label": "Device/Pet 实体"
+    },
+    {
+      "id": "edge_21",
+      "fromNode": "moment_routes",
+      "fromSide": "right",
+      "toNode": "entities_layer",
+      "toSide": "left",
+      "label": "Moment 实体"
+    },
+    {
+      "id": "edge_22",
+      "fromNode": "chat_routes",
+      "fromSide": "right",
+      "toNode": "entities_layer",
+      "toSide": "left",
+      "label": "ChatMessage 实体"
+    },
+    {
+      "id": "edge_23",
+      "fromNode": "entities_layer",
+      "fromSide": "bottom",
+      "toNode": "database",
+      "toSide": "top",
+      "label": "ORM 映射"
+    },
+    {
+      "id": "edge_24",
+      "fromNode": "utils_deepseek",
+      "fromSide": "right",
+      "toNode": "external_deepseek",
+      "toSide": "left",
+      "label": "API 调用"
+    },
+    {
+      "id": "edge_25",
+      "fromNode": "backend_entry",
+      "fromSide": "bottom",
+      "toNode": "config",
+      "toSide": "top",
+      "label": "读取配置"
+    },
+    {
+      "id": "edge_26",
+      "fromNode": "request_layer",
+      "fromSide": "bottom",
+      "toNode": "config",
+      "toSide": "left",
+      "label": "读取配置"
+    },
+    {
+      "id": "edge_27",
+      "fromNode": "backend_entry",
+      "fromSide": "top",
+      "toNode": "user_routes",
+      "toSide": "left",
+      "label": "路由注册"
+    },
+    {
+      "id": "edge_28",
+      "fromNode": "backend_entry",
+      "fromSide": "top",
+      "toNode": "upload_routes",
+      "toSide": "left",
+      "label": "路由注册"
+    },
+    {
+      "id": "edge_29",
+      "fromNode": "user_routes",
+      "fromSide": "right",
+      "toNode": "middleware_auth",
+      "toSide": "left",
+      "label": "认证"
+    },
+    {
+      "id": "edge_30",
+      "fromNode": "user_routes",
+      "fromSide": "right",
+      "toNode": "entities_layer",
+      "toSide": "left",
+      "label": "User 实体"
+    },
+    {
+      "id": "edge_31",
+      "fromNode": "upload_routes",
+      "fromSide": "right",
+      "toNode": "middleware_auth",
+      "toSide": "left",
+      "label": "认证"
+    },
+    {
+      "id": "edge_32",
+      "fromNode": "upload_routes",
+      "fromSide": "right",
+      "toNode": "middleware_upload",
+      "toSide": "left",
+      "label": "使用上传"
+    }
+  ]
+}

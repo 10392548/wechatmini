@@ -1,0 +1,153 @@
+page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #f5f5f5;
+}
+
+.page-content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.battery-section {
+  background: linear-gradient(180deg, #4CAF50 0%, #45a049 100%);
+  padding: 40rpx 0 60rpx;
+  border-radius: 0 0 40rpx 40rpx;
+}
+
+.battery-circle {
+  position: relative;
+  width: 320rpx;
+  height: 320rpx;
+  margin: 0 auto;
+}
+
+.canvas {
+  width: 320rpx;
+  height: 320rpx;
+}
+
+.battery-info {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.battery-percent {
+  display: block;
+  font-size: 80rpx;
+  color: white;
+  font-weight: bold;
+}
+
+.battery-status {
+  display: block;
+  font-size: 28rpx;
+  color: white;
+  margin-top: 10rpx;
+}
+
+.content {
+  padding: 30rpx;
+}
+
+.power-mode {
+  background: white;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  display: flex;
+  align-items: center;
+  margin-bottom: 40rpx;
+}
+
+.mode-icon {
+  width: 80rpx;
+  height: 80rpx;
+  background: #FFF3E0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20rpx;
+  font-size: 40rpx;
+}
+
+.mode-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.mode-title {
+  font-size: 32rpx;
+  color: #333;
+  font-weight: 500;
+  margin-bottom: 8rpx;
+}
+
+.mode-desc {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.usage-section {
+  background: white;
+  border-radius: 20rpx;
+  padding: 30rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  color: #333;
+  font-weight: 500;
+  margin-bottom: 30rpx;
+  display: block;
+}
+
+.usage-item {
+  margin-bottom: 30rpx;
+}
+
+.usage-item:last-child {
+  margin-bottom: 0;
+}
+
+.usage-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15rpx;
+}
+
+.usage-name {
+  font-size: 28rpx;
+  color: #666;
+}
+
+.usage-percent {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+.progress-bar {
+  height: 12rpx;
+  background: #f0f0f0;
+  border-radius: 6rpx;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 6rpx;
+}
+
+.progress-fill.blue {
+  background: #2196F3;
+}
+
+.progress-fill.orange {
+  background: #FF9800;
+}

@@ -1,0 +1,37 @@
+<!--pages/diary/diary.wxml-->
+<navigation-bar title="成长日志" back="{{true}}" color="black" background="#FFF"></navigation-bar>
+<view class="page-content">
+  <!-- 标签切换 -->
+  <view class="tabs-container">
+    <view class="tab-item {{activeTab === 0 ? 'active' : ''}}" data-index="0" bindtap="onTabChange">每日回顾</view>
+    <view class="tab-item {{activeTab === 1 ? 'active' : ''}}" data-index="1" bindtap="onTabChange">健康报告</view>
+  </view>
+
+  <!-- 时间线列表 -->
+  <view class="diary-list">
+    <block wx:if="{{activeTab === 0}}">
+      <view class="diary-item" wx:for="{{diaryList}}" wx:key="id" style="background: {{item.bgColor}};">
+        <view class="item-left">
+          <view class="icon-wrapper" style="background: {{item.iconColor}};">{{item.emoji}}</view>
+        </view>
+        <view class="item-content">
+          <view class="item-time">{{item.time}}</view>
+          <view class="item-title">{{item.title}}</view>
+          <view class="item-desc">{{item.description}}</view>
+        </view>
+      </view>
+    </block>
+    <block wx:if="{{activeTab === 1}}">
+      <view class="diary-item" wx:for="{{healthReports}}" wx:key="id" style="background: {{item.bgColor}};">
+        <view class="item-left">
+          <view class="icon-wrapper" style="background: {{item.iconColor}};">{{item.emoji}}</view>
+        </view>
+        <view class="item-content">
+          <view class="item-time">{{item.time}}</view>
+          <view class="item-title">{{item.title}}</view>
+          <view class="item-desc">{{item.description}}</view>
+        </view>
+      </view>
+    </block>
+  </view>
+</view>

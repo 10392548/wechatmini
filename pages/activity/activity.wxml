@@ -1,0 +1,78 @@
+<!--pages/activity/activity.wxml-->
+<navigation-bar title="运动轨迹" back="{{true}}" color="black" background="#FFF"></navigation-bar>
+<view class="page-content">
+  <view class="calorie-card">
+    <text class="label">今日消耗</text>
+    <view class="value-row">
+      <text class="value">1,280</text>
+      <text class="unit">kcal</text>
+    </view>
+    <text class="compare">+12% 同比昨天</text>
+  </view>
+
+  <view class="map-container">
+    <map
+      id="petMap"
+      class="map-canvas"
+      longitude="{{longitude}}"
+      latitude="{{latitude}}"
+      scale="{{scale}}"
+      markers="{{markers}}"
+      polyline="{{polyline}}"
+      show-location="{{true}}"
+      enable-3D="{{true}}"
+      enable-overlooking="{{true}}"
+      enable-zoom="{{true}}"
+      enable-scroll="{{true}}"
+      enable-rotate="{{true}}"
+    >
+      <cover-view class="map-controls">
+        <cover-view class="control-btn" bindtap="centerLocation">
+          <cover-image src="/images/location.png" class="control-icon"></cover-image>
+        </cover-view>
+        <cover-view class="control-btn" bindtap="toggleHeatmap">
+          <cover-image src="/images/heatmap.png" class="control-icon"></cover-image>
+        </cover-view>
+      </cover-view>
+    </map>
+    <view class="map-info">
+      <text class="map-label">运动距离: {{distance}} km</text>
+      <text class="map-label">运动时长: {{duration}} 分钟</text>
+    </view>
+  </view>
+
+  <view class="stats-row">
+    <view class="stat-card blue">
+      <text class="stat-icon">⏱</text>
+      <text class="stat-label">活跃时间</text>
+      <text class="stat-value">4.5 小时</text>
+    </view>
+    <view class="stat-card purple">
+      <text class="stat-icon">👣</text>
+      <text class="stat-label">行走步数</text>
+      <text class="stat-value">12,482 步</text>
+    </view>
+  </view>
+
+  <view class="detail-section">
+    <text class="section-title">状态详情</text>
+    <view class="detail-list">
+      <view class="detail-item">
+        <view class="detail-icon green">🏃</view>
+        <view class="detail-info">
+          <text class="detail-name">奔跑</text>
+          <text class="detail-time">12:30 - 13:10</text>
+        </view>
+        <text class="detail-value">420 kcal</text>
+      </view>
+      <view class="detail-item">
+        <view class="detail-icon yellow">🌙</view>
+        <view class="detail-info">
+          <text class="detail-name">深度睡眠</text>
+          <text class="detail-time">01:00 - 07:00</text>
+        </view>
+        <text class="detail-value">76% 评分</text>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,28 @@
+{
+  "name": "pet-collar-server",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "ts-node-dev --respawn src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "typeorm": "^0.3.17",
+    "mysql2": "^3.6.0",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
+    "axios": "^1.6.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "@types/jsonwebtoken": "^9.0.3",
+    "@types/multer": "^1.4.7",
+    "@types/node": "^20.5.0",
+    "@types/cors": "^2.8.13",
+    "typescript": "^5.1.6",
+    "ts-node-dev": "^2.0.0"
+  }
+}

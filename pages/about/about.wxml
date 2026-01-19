@@ -1,0 +1,59 @@
+<!--pages/about/about.wxml-->
+<navigation-bar title="关于我们" back="{{true}}" color="black" background="#FFF"></navigation-bar>
+<scroll-view class="page-content" scroll-y show-scrollbar="{{false}}">
+  <!-- Logo -->
+  <view class="logo-section">
+    <image class="app-logo" src="/images/pet.png" mode="aspectFill"></image>
+    <view class="app-name">宠物项圈</view>
+    <view class="app-version">版本 1.0.0</view>
+  </view>
+
+  <!-- 应用介绍 -->
+  <view class="section-card">
+    <view class="section-title">应用介绍</view>
+    <text class="intro-text">宠物项圈是一款专为宠物主人打造的智能管理应用。通过智能项圈设备，实时监测宠物的运动、健康和位置信息，让您随时随地了解爱宠的状态。</text>
+  </view>
+
+  <!-- 功能特点 -->
+  <view class="section-card">
+    <view class="section-title">功能特点</view>
+    <view class="feature-list">
+      <view class="feature-item">
+        <text class="feature-icon">📱</text>
+        <text class="feature-text">设备绑定管理</text>
+      </view>
+      <view class="feature-item">
+        <text class="feature-icon">🏃</text>
+        <text class="feature-text">运动轨迹追踪</text>
+      </view>
+      <view class="feature-item">
+        <text class="feature-icon">🔋</text>
+        <text class="feature-text">电池状态监控</text>
+      </view>
+      <view class="feature-item">
+        <text class="feature-icon">📔</text>
+        <text class="feature-text">成长日志记录</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 联系我们 -->
+  <view class="section-card">
+    <view class="section-title">联系我们</view>
+    <view class="contact-list">
+      <view class="contact-item">
+        <text class="contact-label">客服电话</text>
+        <text class="contact-value">400-888-8888</text>
+      </view>
+      <view class="contact-item">
+        <text class="contact-label">客服邮箱</text>
+        <text class="contact-value">support@petcollar.com</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 版权信息 -->
+  <view class="copyright">
+    <text>© 2026 宠物项圈 All Rights Reserved</text>
+  </view>
+</scroll-view>

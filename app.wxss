@@ -1,0 +1,22 @@
+/**app.wxss**/
+page {
+  width: 100%;
+  overflow-x: hidden;
+  font-family: -apple-system-font, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei UI", "Microsoft YaHei", Arial, sans-serif;
+}
+
+/* 通配符选择器在某些版本可能导致编译错误，改用具体选择器 */
+page, view, text, image, button, input, textarea, scroll-view, swiper, swiper-item,
+navigator, icon, form, label, picker, slider, switch, checkbox, radio, canvas, map {
+  box-sizing: border-box;
+}
+
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 200rpx 0;
+  box-sizing: border-box;
+} 

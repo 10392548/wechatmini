@@ -1,0 +1,46 @@
+<!--pages/battery/battery.wxml-->
+<navigation-bar title="电池状态" back="{{true}}" color="black" background="#FFF"></navigation-bar>
+<view class="page-content">
+  <view class="battery-section">
+    <view class="battery-circle">
+      <canvas canvas-id="batteryCanvas" class="canvas"></canvas>
+      <view class="battery-info">
+        <text class="battery-percent">{{battery}}%</text>
+        <text class="battery-status">{{status}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="content">
+    <view class="power-mode">
+      <view class="mode-icon">🔋</view>
+      <view class="mode-info">
+        <text class="mode-title">超级省电模式</text>
+        <text class="mode-desc">保证重要基本功能</text>
+      </view>
+      <switch checked="{{powerSaveMode}}" bindchange="togglePowerMode" color="#FF8C00"/>
+    </view>
+
+    <view class="usage-section">
+      <text class="section-title">耗电排行</text>
+      <view class="usage-item">
+        <view class="usage-info">
+          <text class="usage-name">GPS定位</text>
+          <text class="usage-percent">65%</text>
+        </view>
+        <view class="progress-bar">
+          <view class="progress-fill blue" style="width: 65%"></view>
+        </view>
+      </view>
+      <view class="usage-item">
+        <view class="usage-info">
+          <text class="usage-name">传感器</text>
+          <text class="usage-percent">20%</text>
+        </view>
+        <view class="progress-bar">
+          <view class="progress-fill orange" style="width: 20%"></view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

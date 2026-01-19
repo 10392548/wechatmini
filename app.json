@@ -1,0 +1,55 @@
+{
+  "pages": [
+    "pages/login/login",
+    "pages/index/index",
+    "pages/bind/bind",
+    "pages/moments/moments",
+    "pages/my/my",
+    "pages/profile/profile",
+    "pages/about/about",
+    "pages/privacy/privacy",
+    "pages/chat/chat",
+    "pages/activity/activity",
+    "pages/diary/diary",
+    "pages/battery/battery"
+  ],
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#FF8C00",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "images/home-active.png",
+        "selectedIconPath": "images/home.png"
+      },
+      {
+        "pagePath": "pages/chat/chat",
+        "text": "AI聊天",
+        "iconPath": "images/chat.png",
+        "selectedIconPath": "images/chat-active.png"
+      },
+      {
+        "pagePath": "pages/moments/moments",
+        "text": "朋友圈",
+        "iconPath": "images/moments-active.png",
+        "selectedIconPath": "images/moments.png"
+      },
+      {
+        "pagePath": "pages/my/my",
+        "text": "我的",
+        "iconPath": "images/my-active.png",
+        "selectedIconPath": "images/my.png"
+      }
+    ]
+  },
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationStyle": "custom"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

@@ -1,0 +1,189 @@
+<!--bind.wxml-->
+<navigation-bar title="绑定新设备" back="{{true}}" color="black" background="#FFFAF5"></navigation-bar>
+
+<view class="bind-page">
+  <!-- 顶部装饰性波浪 -->
+  <view class="wave-decoration">
+    <view class="wave wave-1"></view>
+    <view class="wave wave-2"></view>
+  </view>
+
+  <scroll-view class="content-scroll" scroll-y show-scrollbar="{{false}}">
+    <!-- 问候标题区 -->
+    <view class="header-section">
+      <view class="emoji-badge">🐾</view>
+      <view class="main-title">给宠物绑定设备</view>
+      <view class="subtitle-text">填写信息，开启智能养宠之旅</view>
+    </view>
+
+    <!-- 模式切换（仅当有宠物时显示） -->
+    <view class="toggle-container" wx:if="{{existingPets.length > 0}}">
+      <view class="toggle-track">
+        <view class="toggle-indicator {{bindMode === 'new' ? 'left' : 'right'}}"></view>
+        <view class="toggle-option {{bindMode === 'new' ? 'active' : ''}}" bindtap="switchMode" data-mode="new">
+          <text>新建宠物</text>
+        </view>
+        <view class="toggle-option {{bindMode === 'existing' ? 'active' : ''}}" bindtap="switchMode" data-mode="existing">
+          <text>已有宠物</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 新建宠物表单 -->
+    <view class="form-container" wx:if="{{bindMode === 'new'}}">
+      <!-- 头像上传 - 突出显示 -->
+      <view class="avatar-section">
+        <view class="avatar-ring">
+          <view class="avatar-pulse"></view>
+          <image
+            wx:if="{{petInfo.avatar}}"
+            src="{{petInfo.avatar}}"
+            class="avatar-image"
+            mode="aspectFill"
+          ></image>
+          <view wx:else class="avatar-placeholder" bindtap="chooseAvatar">
+            <text class="camera-icon">📷</text>
+            <text class="upload-hint">点击上传</text>
+          </view>
+        </view>
+        <view class="avatar-label" wx:if="{{petInfo.avatar}}" bindtap="chooseAvatar">
+          <text>更换头像</text>
+        </view>
+      </view>
+
+      <!-- 表单输入卡片 -->
+      <view class="input-card-group">
+        <!-- 宠物名称 -->
+        <view class="input-row">
+          <view class="input-icon">📝</view>
+          <view class="input-wrapper">
+            <view class="input-label">宠物名称 <text class="required-mark">*</text></view>
+            <input
+              class="clean-input"
+              placeholder="给宠物起个可爱的名字"
+              value="{{petInfo.name}}"
+              bindinput="onNameInput"
+              maxlength="20"
+            />
+          </view>
+        </view>
+
+        <!-- 品种 -->
+        <view class="input-row">
+          <view class="input-icon">🐕</view>
+          <view class="input-wrapper">
+            <view class="input-label">品种</view>
+            <input
+              class="clean-input"
+              placeholder="如：金毛、英短"
+              value="{{petInfo.breed}}"
+              bindinput="onBreedInput"
+              maxlength="30"
+            />
+          </view>
+        </view>
+
+        <!-- 性别选择 -->
+        <view class="gender-card">
+          <view class="gender-label">选择性别</view>
+          <view class="gender-buttons">
+            <view
+              class="gender-btn {{petInfo.gender === 'male' ? 'male-active' : ''}}"
+              bindtap="selectGender"
+              data-gender="male"
+            >
+              <text class="gender-emoji">👦</text>
+              <text class="gender-text">弟弟</text>
+            </view>
+            <view
+              class="gender-btn {{petInfo.gender === 'female' ? 'female-active' : ''}}"
+              bindtap="selectGender"
+              data-gender="female"
+            >
+              <text class="gender-emoji">👧</text>
+              <text class="gender-text">妹妹</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 选择已有宠物 -->
+    <view class="pets-container" wx:if="{{bindMode === 'existing'}}">
+      <view class="section-header">
+        <text class="section-icon">📋</text>
+        <text class="section-title">选择宠物</text>
+      </view>
+      <view class="pets-grid">
+        <view
+          class="pet-card {{selectedPetId === pet.id ? 'selected' : ''}}"
+          wx:for="{{existingPets}}"
+          wx:key="id"
+          bindtap="selectPet"
+          data-pet-id="{{pet.id}}"
+        >
+          <view class="pet-card-inner">
+            <image class="pet-card-avatar" src="{{pet.avatar || '/images/pet.png'}}" mode="aspectFill"></image>
+            <view class="pet-card-info">
+              <view class="pet-card-name">{{pet.name}}</view>
+              <view class="pet-card-breed">{{pet.breed || '未知品种'}}</view>
+            </view>
+            <view class="check-badge" wx:if="{{selectedPetId === pet.id}}">✓</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 设备输入区 -->
+    <view class="device-section">
+      <view class="section-header">
+        <text class="section-icon">🔌</text>
+        <text class="section-title">设备信息</text>
+      </view>
+
+      <view class="imei-input-card">
+        <view class="imei-left">
+          <view class="imei-icon-wrapper">
+            <text class="imei-icon">📡</text>
+          </view>
+          <view class="imei-text-group">
+            <view class="imei-label">IMEI 号码</view>
+            <view class="imei-hint">15位数字</view>
+          </view>
+        </view>
+        <input
+          class="imei-field"
+          type="number"
+          placeholder="输入IMEI"
+          value="{{imei}}"
+          bindinput="onImeiInput"
+          maxlength="15"
+        />
+      </view>
+
+      <!-- 提示卡片 -->
+      <view class="hint-card">
+        <view class="hint-row">
+          <text class="hint-bullet">💡</text>
+          <text class="hint-text">IMEI 在设备背面或包装盒上</text>
+        </view>
+        <view class="hint-row">
+          <text class="hint-bullet">🔒</text>
+          <text class="hint-text">一个设备只能绑定一只宠物</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 底部按钮区 -->
+    <view class="bottom-action">
+      <button
+        class="bind-btn {{binding ? 'loading' : ''}}"
+        bindtap="onBind"
+        disabled="{{binding}}"
+      >
+        <text wx:if="{{!binding}}">立即绑定</text>
+        <text wx:else>绑定中...</text>
+      </button>
+    </view>
+  </scroll-view>
+</view>

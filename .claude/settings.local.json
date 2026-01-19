@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm init:*)",
+      "Bash(npm install:*)",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "Bash(npm run dev)",
+      "Bash(timeout:*)",
+      "Bash(curl:*)",
+      "Bash(ping:*)",
+      "Bash(dir:*)",
+      "Skill(frontend-design)",
+      "Bash(git add:*)",
+      "Bash(del:*)"
+    ]
+  }
+}

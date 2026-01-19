@@ -1,0 +1,100 @@
+<!--pages/privacy/privacy.wxml-->
+<navigation-bar title="隐私设置" back="{{true}}" color="black" background="#FFF"></navigation-bar>
+<view class="page-content">
+  <!-- 数据收集 -->
+  <view class="section-card">
+    <view class="section-title">数据收集</view>
+    <view class="setting-list">
+      <view class="setting-item">
+        <view class="setting-info">
+          <text class="setting-name">位置信息</text>
+          <text class="setting-desc">用于追踪宠物位置</text>
+        </view>
+        <switch checked="{{settings.location}}" bindchange="onLocationChange" color="#FF8C00"/>
+      </view>
+      <view class="setting-item">
+        <view class="setting-info">
+          <text class="setting-name">运动数据</text>
+          <text class="setting-desc">用于分析宠物运动情况</text>
+        </view>
+        <switch checked="{{settings.activity}}" bindchange="onActivityChange" color="#FF8C00"/>
+      </view>
+    </view>
+  </view>
+
+  <!-- 隐私保护 -->
+  <view class="section-card">
+    <view class="section-title">隐私保护</view>
+    <view class="setting-list">
+      <view class="setting-item">
+        <view class="setting-info">
+          <text class="setting-name">朋友圈可见</text>
+          <text class="setting-desc">允许其他用户查看我的动态</text>
+        </view>
+        <switch checked="{{settings.momentsVisible}}" bindchange="onMomentsVisibleChange" color="#FF8C00"/>
+      </view>
+    </view>
+  </view>
+
+  <!-- 账号安全 -->
+  <view class="section-card">
+    <view class="section-title">账号安全</view>
+    <view class="menu-list">
+   
+      <view class="menu-item" bindtap="clearCache">
+        <text class="menu-name">清除缓存</text>
+        <text class="menu-arrow">></text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 隐私政策 -->
+  <view class="privacy-link" bindtap="viewPrivacyPolicy">
+    <text>查看隐私政策</text>
+  </view>
+</view>
+
+<!-- 隐私政策模态框 -->
+<view class="modal" wx:if="{{showModal}}" bindtap="closeModal">
+  <view class="modal-content" catchtap="stopPropagation">
+    <view class="modal-header">
+      <text class="modal-title">隐私政策</text>
+      <text class="modal-close" bindtap="closeModal">×</text>
+    </view>
+    <scroll-view class="modal-body" scroll-y>
+      <text class="policy-text">【隐私政策】
+
+一、信息收集
+我们会收集以下信息以提供更好的服务：
+1. 位置信息：用于追踪宠物实时位置
+2. 运动数据：用于分析宠物运动情况和健康状态
+3. 设备信息：用于设备绑定和管理
+
+二、信息使用
+收集的信息仅用于：
+1. 提供宠物追踪和健康监测服务
+2. 改进产品功能和用户体验
+3. 保障账号和设备安全
+
+三、信息保护
+我们采取以下措施保护您的信息：
+1. 数据加密传输和存储
+2. 严格的访问权限控制
+3. 定期安全审计
+
+四、信息共享
+未经您同意，我们不会与第三方共享您的个人信息，除非：
+1. 法律法规要求
+2. 保护用户或公众安全
+3. 经您明确授权
+
+五、您的权利
+您有权：
+1. 查看和修改个人信息
+2. 删除账号和数据
+3. 撤回授权
+
+如有疑问，请联系客服：support@petcollar.com</text>
+    </scroll-view>
+  </view>
+</view>

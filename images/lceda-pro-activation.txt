@@ -1,0 +1,8 @@
+{
+    "username": "tom003",
+    "customer_code": "11587500A",
+    "email": "",
+    "phone": "13556109223",
+    "company": "",
+    "license": "dXNlcm5hbWV8Y3VzdG9tZXJfY29kZXxlbWFpbHxwaG9uZXxjb21wYW55,PxMHfH0QEXSjNrDhm5vAZlrGdzz12DxmhjZVcTeLFQQ51DfL0/okXXduklQvv8Ixx7JlAh7cDbMfwSj0a+9WQqzh5D9g9Yci9az/AS+uAWYCNtgPxDxmxeBobReMiCJwLhy2Uu0Rj6ZrAeZqrxglf0LXhnp7bF9lRFgXcJaMZiE="
+}

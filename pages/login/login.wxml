@@ -1,0 +1,12 @@
+<view class="login-container">
+  <view class="logo">
+    <image src="/images/pet.png" mode="aspectFit" />
+  </view>
+
+  <view class="title">宠物项圈</view>
+  <view class="subtitle">智能管理，陪伴成长</view>
+
+  <button class="login-btn" bindtap="onLogin">
+    微信登录
+  </button>
+</view>

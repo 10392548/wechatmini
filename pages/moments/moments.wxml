@@ -1,0 +1,44 @@
+<!--moments.wxml-->
+<navigation-bar title="朋友圈" back="{{false}}" color="black" background="#FFF"></navigation-bar>
+<view class="page-content">
+  <view class="content">
+    <view class="moment-item" wx:for="{{moments}}" wx:key="id">
+      <view class="moment-header">
+        <image class="avatar" src="/images/pet.png" mode="aspectFill"></image>
+        <view class="user-info">
+          <view class="nickname">{{item.nickname}}</view>
+          <view class="time-location">{{item.time}} · {{item.location}}</view>
+        </view>
+      </view>
+      <view class="moment-image-placeholder"></view>
+      <view class="moment-content">{{item.content}}</view>
+      <view class="moment-footer">
+        <view class="action-item {{item.liked ? 'liked' : ''}}" bindtap="onLike" data-id="{{item.id}}">
+          <image class="action-icon" src="/images/Like.png" mode="aspectFit"></image>
+          <text class="count">{{item.likes}}</text>
+        </view>
+        <view class="action-item" bindtap="toggleComments" data-id="{{item.id}}">
+          <image class="action-icon" src="/images/Comment.png" mode="aspectFit"></image>
+          <text class="count">{{item.comments.length}}</text>
+        </view>
+      </view>
+
+      <!-- 评论区域 -->
+      <view class="comments-section" wx:if="{{item.showComments}}">
+        <view class="comment-item" wx:for="{{item.comments}}" wx:for-item="comment" wx:key="id">
+          <view class="comment-main">
+            <text class="comment-nickname">{{comment.nickname}}</text>
+            <text class="comment-content">{{comment.content}}</text>
+            <text class="comment-time">{{comment.time}}</text>
+          </view>
+          <!-- 回复列表 -->
+          <view class="reply-item" wx:for="{{comment.replies}}" wx:for-item="reply" wx:key="id">
+            <text class="reply-nickname">{{reply.nickname}}</text>
+            <text class="reply-content">{{reply.content}}</text>
+            <text class="reply-time">{{reply.time}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

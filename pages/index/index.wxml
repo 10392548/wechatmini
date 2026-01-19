@@ -1,0 +1,150 @@
+<!--index.wxml-->
+<navigation-bar title="宠物项圈" back="{{false}}" color="black" background="#FFF"></navigation-bar>
+<scroll-view class="page-content" scroll-y show-scrollbar="{{false}}">
+  <!-- 宠物信息卡片 -->
+  <view class="pet-card">
+    <view class="pet-avatar-wrapper">
+      <image class="pet-avatar" src="/images/pet.png" mode="aspectFill"></image>
+      <view class="status-dot"></view>
+    </view>
+    <view class="pet-info">
+      <view class="pet-name">{{pet.name}}</view>
+      <view class="pet-status">{{pet.status}}</view>
+    </view>
+    <view class="battery-info">
+      <text class="battery-icon">🔋</text>
+      <text class="battery-text">{{pet.battery}}%</text>
+    </view>
+  </view>
+
+  <!-- 今日数据 -->
+  <view class="section-card" bindtap="goToActivity">
+    <view class="section-header">
+      <text class="section-title">今日数据</text>
+      <text class="section-more">查看详情 ></text>
+    </view>
+    <view class="stats-row">
+      <view class="stat-item">
+        <text class="stat-value">{{todayStats.calories}}</text>
+        <text class="stat-unit">kcal</text>
+        <text class="stat-label">消耗热量</text>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item">
+        <text class="stat-value">{{todayStats.activeTime}}</text>
+        <text class="stat-unit">小时</text>
+        <text class="stat-label">活跃时间</text>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item">
+        <text class="stat-value">{{todayStats.steps}}</text>
+        <text class="stat-unit">步</text>
+        <text class="stat-label">行走步数</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 电池状态 -->
+  <view class="section-card" bindtap="goToBattery">
+    <view class="section-header">
+      <text class="section-title">电池状态</text>
+      <text class="section-more">查看详情 ></text>
+    </view>
+    <view class="battery-card">
+      <view class="battery-main">
+        <text class="battery-emoji">🔋</text>
+        <view class="battery-progress-wrapper">
+          <view class="battery-progress-bar">
+            <view class="battery-progress-fill" style="width: {{pet.battery}}%"></view>
+          </view>
+          <view class="battery-labels">
+            <text class="battery-percent-text">{{pet.battery}}%</text>
+            <text class="battery-estimate">预计续航 {{batteryEstimate}} 天</text>
+          </view>
+        </view>
+      </view>
+      <view class="power-usage">
+        <view class="usage-row">
+          <text class="usage-name">GPS定位</text>
+          <view class="usage-bar">
+            <view class="usage-fill blue" style="width: 65%"></view>
+          </view>
+          <text class="usage-percent">65%</text>
+        </view>
+        <view class="usage-row">
+          <text class="usage-name">传感器</text>
+          <view class="usage-bar">
+            <view class="usage-fill orange" style="width: 20%"></view>
+          </view>
+          <text class="usage-percent">20%</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 快捷功能 -->
+  <view class="section-card">
+    <view class="section-header">
+      <text class="section-title">快捷功能</text>
+    </view>
+    <view class="features-grid">
+      <view class="feature-item" wx:for="{{features}}" wx:key="id" bindtap="onFeatureTap" data-url="{{item.url}}">
+        <view class="feature-icon" style="background: {{item.color}}">
+          <image class="feature-icon-img" src="{{item.icon}}" mode="aspectFit"></image>
+        </view>
+        <text class="feature-name">{{item.name}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 最新动态 -->
+  <view class="section-card" bindtap="goToMoments">
+    <view class="section-header">
+      <text class="section-title">最新动态</text>
+      <text class="section-more">查看更多 ></text>
+    </view>
+    <view class="moment-preview">
+      <view class="moment-header">
+        <image class="moment-avatar" src="/images/pet.png" mode="aspectFill"></image>
+        <view class="moment-info">
+          <text class="moment-nickname">{{latestMoment.nickname}}</text>
+          <text class="moment-time">{{latestMoment.time}}</text>
+        </view>
+      </view>
+      <text class="moment-content">{{latestMoment.content}}</text>
+      <view class="moment-actions">
+        <view class="moment-action">
+          <text class="action-emoji">❤️</text>
+          <text class="action-count">{{latestMoment.likes}}</text>
+        </view>
+        <view class="moment-action">
+          <text class="action-emoji">💬</text>
+          <text class="action-count">{{latestMoment.comments}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 今日记录 -->
+  <view class="section-card" bindtap="goToDiary">
+    <view class="section-header">
+      <text class="section-title">今日记录</text>
+      <text class="section-more">查看全部 ></text>
+    </view>
+    <view class="diary-list">
+      <view class="diary-item" wx:for="{{todayDiary}}" wx:key="id">
+        <view class="diary-icon" style="background: {{item.bgColor}}">
+          <text>{{item.emoji}}</text>
+        </view>
+        <view class="diary-content">
+          <text class="diary-title">{{item.title}}</text>
+          <text class="diary-desc">{{item.description}}</text>
+        </view>
+        <text class="diary-time">{{item.time}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部间距 -->
+  <view style="height: 40rpx;"></view>
+</scroll-view>
