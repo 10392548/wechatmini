@@ -6,9 +6,9 @@ Page({
     activeTab: 0,
     diaryList: [],
     healthReports: [],
-    loading: false,
     refreshing: false,
-    empty: false
+    empty: false,
+    hasLoaded: false
   },
 
   onLoad() {
@@ -16,8 +16,10 @@ Page({
   },
 
   onShow() {
-    // 每次显示页面时刷新数据
-    this.loadGrowthLogs()
+    // 只在从创建页返回时刷新（通过检查是否有数据）
+    if (this.data.hasLoaded) {
+      this.loadGrowthLogs()
+    }
   },
 
   onPullDownRefresh() {
@@ -26,7 +28,7 @@ Page({
     })
   },
 
-  // 下拉刷新（scroll-view 自带刷新）
+  // 下拉刷新
   onRefresh() {
     this.setData({ refreshing: true })
     this.loadGrowthLogs()
@@ -34,7 +36,6 @@ Page({
 
   async loadGrowthLogs() {
     try {
-      this.setData({ loading: true })
       const app = getApp()
       const currentPet = app.globalData.currentPet
 
@@ -42,9 +43,9 @@ Page({
         this.setData({
           diaryList: [],
           healthReports: [],
-          loading: false,
           refreshing: false,
-          empty: true
+          empty: true,
+          hasLoaded: true
         })
         return
       }
@@ -57,35 +58,35 @@ Page({
 
       if (Array.isArray(logs)) {
         logs.forEach(log => {
-        const formatted = this.formatLogItem(log)
-        if (log.log_type === 'sleep') {
-          healthReports.push(formatted)
-        } else {
-          diaryList.push(formatted)
-        }
-      })
+          const formatted = this.formatLogItem(log)
+          if (log.log_type === 'sleep') {
+            healthReports.push(formatted)
+          } else {
+            diaryList.push(formatted)
+          }
+        })
       }
 
       this.setData({
         diaryList,
         healthReports,
-        loading: false,
         refreshing: false,
-        empty: logs.length === 0
+        empty: logs.length === 0,
+        hasLoaded: true
       })
     } catch (error) {
       console.error('加载成长日志失败', error)
       wx.showToast({ title: '加载失败，请重试', icon: 'none' })
       this.setData({
-        loading: false,
         refreshing: false,
-        empty: true
+        empty: true,
+        hasLoaded: true
       })
     }
   },
 
   formatLogItem(log) {
-    // 日志类型映射 - 统一蓝色主题
+    // 日志类型映射
     const typeMap = {
       'activity': { image: '/images/Activity.png', color: '#2196F3' },
       'sleep': { image: '/images/sleep.png', color: '#2196F3' },
@@ -138,7 +139,7 @@ Page({
   },
 
   onTabChange(e) {
-    this.setData({ activeTab: e.currentTarget.dataset.index })
+    this.setData({ activeTab: parseInt(e.currentTarget.dataset.index) })
   },
 
   onCreateLog() {
