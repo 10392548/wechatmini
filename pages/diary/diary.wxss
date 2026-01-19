@@ -292,3 +292,104 @@ page {
 .fab:active {
   transform: scale(0.95);
 }
+
+/* 健康记录容器 */
+.health-container {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 健康记录列表项 */
+.health-record-item {
+  margin-bottom: 20rpx;
+}
+
+.health-record-card {
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 24rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.06);
+}
+
+.health-record-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16rpx;
+}
+
+.health-type-badge {
+  display: flex;
+  align-items: center;
+  padding: 8rpx 16rpx;
+  border-radius: 20rpx;
+}
+
+.type-icon {
+  font-size: 24rpx;
+  margin-right: 6rpx;
+}
+
+.type-name {
+  font-size: 24rpx;
+  color: #fff;
+  font-weight: 500;
+}
+
+.health-date {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.health-record-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+  display: block;
+  margin-bottom: 12rpx;
+}
+
+.health-record-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.detail-item {
+  font-size: 24rpx;
+  color: #666;
+  background: #f9f9f9;
+  padding: 8rpx 16rpx;
+  border-radius: 12rpx;
+}
+
+/* 居中添加按钮 */
+.add-health-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24rpx;
+  margin-top: 20rpx;
+  background: linear-gradient(135deg, #FFB88C 0%, #FF8C69 100%);
+  border-radius: 44rpx;
+  box-shadow: 0 8rpx 24rpx rgba(255, 140, 105, 0.4);
+  transition: all 0.3s ease;
+}
+
+.add-health-btn:active {
+  transform: scale(0.98);
+  box-shadow: 0 4rpx 12rpx rgba(255, 140, 105, 0.3);
+}
+
+.add-btn-icon {
+  font-size: 32rpx;
+  color: #fff;
+  margin-right: 8rpx;
+  line-height: 1;
+}
+
+.add-btn-text {
+  font-size: 28rpx;
+  color: #fff;
+  font-weight: 600;
+}

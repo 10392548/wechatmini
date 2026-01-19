@@ -134,7 +134,7 @@
     <view class="diary-list">
       <view class="diary-item" wx:for="{{todayDiary}}" wx:key="id">
         <view class="diary-icon" style="background: {{item.bgColor}}">
-          <text>{{item.emoji}}</text>
+          <image class="diary-icon-img" src="{{item.image}}" mode="aspectFit"></image>
         </view>
         <view class="diary-content">
           <text class="diary-title">{{item.title}}</text>

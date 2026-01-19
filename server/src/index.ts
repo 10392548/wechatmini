@@ -10,6 +10,7 @@ import momentRoutes from './routes/moment';
 import chatRoutes from './routes/chat';
 import userRoutes from './routes/user';
 import uploadRoutes from './routes/upload';
+import healthRoutes from './routes/health';
 
 // 实体导入
 import { User } from './entities/User';
@@ -21,6 +22,7 @@ import { MomentComment } from './entities/MomentComment';
 import { ChatMessage } from './entities/ChatMessage';
 import { ActivityData } from './entities/ActivityData';
 import { GrowthLog } from './entities/GrowthLog';
+import { HealthRecord } from './entities/HealthRecord';
 
 // 初始化数据库连接
 export const AppDataSource = new DataSource({
@@ -30,7 +32,7 @@ export const AppDataSource = new DataSource({
   username: config.database.username,
   password: config.database.password,
   database: config.database.database,
-  entities: [User, Pet, Device, Moment, MomentLike, MomentComment, ChatMessage, ActivityData, GrowthLog],
+  entities: [User, Pet, Device, Moment, MomentLike, MomentComment, ChatMessage, ActivityData, GrowthLog, HealthRecord],
   synchronize: false, // 生产环境设为 false
   logging: false
 });
@@ -54,6 +56,7 @@ app.use('/api/device', deviceRoutes);
 app.use('/api/moment', momentRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/pet', healthRoutes);
 
 // 健康检查
 app.get('/health', (req, res) => {

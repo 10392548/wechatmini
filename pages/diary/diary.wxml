@@ -28,7 +28,6 @@
 
       <!-- 每日回顾 -->
       <view class="logs-container" wx:if="{{activeTab === 0}}">
-        <!-- 日期分组 -->
         <block wx:if="{{diaryList.length > 0}}">
           <view class="log-item" wx:for="{{diaryList}}" wx:key="id">
             <view class="log-left">
@@ -48,7 +47,6 @@
           </view>
         </block>
 
-        <!-- 空状态 -->
         <view class="empty-container" wx:if="{{diaryList.length === 0 && !loading}}">
           <text class="empty-emoji">📝</text>
           <text class="empty-title">还没有成长记录</text>
@@ -57,27 +55,35 @@
       </view>
 
       <!-- 健康报告 -->
-      <view class="logs-container" wx:if="{{activeTab === 1}}">
-        <block wx:if="{{healthReports.length > 0}}">
-          <view class="health-item" wx:for="{{healthReports}}" wx:key="id">
-            <view class="health-card">
-              <view class="health-header">
-                <view class="health-icon">
-                  <image class="health-icon-img" src="{{item.image}}" mode="aspectFit"></image>
+      <view class="health-container" wx:if="{{activeTab === 1}}">
+        <block wx:if="{{healthRecords.length > 0}}">
+          <view class="health-record-item" wx:for="{{healthRecords}}" wx:key="id">
+            <view class="health-record-card">
+              <view class="health-record-header">
+                <view class="health-type-badge" style="background: {{item.typeColor}};">
+                  <text class="type-icon">{{item.typeIcon}}</text>
+                  <text class="type-name">{{item.typeName}}</text>
                 </view>
-                <text class="health-time">{{item.time}}</text>
+                <text class="health-date">{{item.recordDate}}</text>
               </view>
-              <text class="health-title">{{item.title}}</text>
-              <text class="health-desc" wx:if="{{item.description}}">{{item.description}}</text>
+              <text class="health-record-title">{{item.title}}</text>
+              <view class="health-record-details" wx:if="{{item.details}}">
+                <text class="detail-item" wx:for="{{item.details}}" wx:key="*">{{item}}</text>
+              </view>
             </view>
           </view>
         </block>
 
-        <!-- 空状态 -->
-        <view class="empty-container" wx:if="{{healthReports.length === 0 && !loading}}">
+        <view class="empty-container" wx:if="{{healthRecords.length === 0 && !loading}}">
           <image class="empty-image" src="/images/Health.png" mode="aspectFit"></image>
           <text class="empty-title">暂无健康记录</text>
           <text class="empty-desc">记录疫苗、生病、用药等健康信息</text>
+        </view>
+
+        <!-- 居中添加按钮 -->
+        <view class="add-health-btn" bindtap="onAddHealthRecord">
+          <text class="add-btn-icon">+</text>
+          <text class="add-btn-text">添加健康记录</text>
         </view>
       </view>
 
@@ -85,8 +91,8 @@
   </scroll-view>
 </view>
 
-<!-- 浮动创建按钮 -->
-<view class="fab" bindtap="onCreateLog">
+<!-- 浮动创建按钮（仅在每日回顾显示） -->
+<view class="fab" bindtap="onCreateLog" wx:if="{{activeTab === 0}}">
   <text class="fab-icon">+</text>
   <view class="fab-ring"></view>
 </view>

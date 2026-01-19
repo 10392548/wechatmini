@@ -1,5 +1,17 @@
 const request = require('../utils/request')
 
+// 成长日志类型配置（统一管理图标和颜色）
+const GROWTH_LOG_TYPE_CONFIG = {
+  'activity': { image: '/images/Activity.png', color: '#2196F3', bgColor: '#FFF3E0' },
+  'sleep': { image: '/images/sleep.png', color: '#3F51B5', bgColor: '#FFF3E0' },
+  'milestone': { image: '/images/Milestone.png', color: '#FF9800', bgColor: '#FFF3E0' }
+}
+
+// 获取日志类型配置
+const getLogTypeConfig = (type) => {
+  return GROWTH_LOG_TYPE_CONFIG[type] || { image: '/images/diary.png', color: '#2196F3', bgColor: '#F5F5F5' }
+}
+
 module.exports = {
   // 获取宠物列表
   getPetList() {
@@ -46,5 +58,35 @@ module.exports = {
   // 删除成长日志
   deleteGrowthLog(petId, logId) {
     return request.delete(`/api/pet/${petId}/growth-logs/${logId}`)
-  }
+  },
+
+  // 获取健康记录列表
+  getHealthRecords(petId, recordType, limit = 50) {
+    const params = { limit }
+    if (recordType) params.record_type = recordType
+    return request.get(`/api/pet/${petId}/health-records`, params)
+  },
+
+  // 获取单条健康记录
+  getHealthRecord(petId, recordId) {
+    return request.get(`/api/pet/${petId}/health-records/${recordId}`)
+  },
+
+  // 创建健康记录
+  createHealthRecord(petId, data) {
+    return request.post(`/api/pet/${petId}/health-records`, data)
+  },
+
+  // 更新健康记录
+  updateHealthRecord(petId, recordId, data) {
+    return request.put(`/api/pet/${petId}/health-records/${recordId}`, data)
+  },
+
+  // 删除健康记录
+  deleteHealthRecord(petId, recordId) {
+    return request.delete(`/api/pet/${petId}/health-records/${recordId}`)
+  },
+
+  // 获取日志类型配置
+  getLogTypeConfig
 }

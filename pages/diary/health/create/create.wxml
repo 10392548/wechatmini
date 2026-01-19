@@ -1,0 +1,351 @@
+<!--pages/diary/health/create/create.wxml-->
+<navigation-bar title="添加健康记录" back="{{true}}" color="black" background="#FFF"></navigation-bar>
+
+<view class="page-container">
+  <scroll-view class="content-scroll" scroll-y show-scrollbar="{{false}}">
+    <view class="content-inner">
+
+      <!-- 类型选择 -->
+      <view class="form-card">
+        <view class="card-label">
+          <text class="label-text">记录类型</text>
+          <text class="label-required">*</text>
+        </view>
+        <view class="type-grid">
+          <view
+            class="type-card {{recordType === 'vaccination' ? 'active' : ''}}"
+            bindtap="onTypeChange"
+            data-value="vaccination">
+            <view class="type-icon-wrapper vaccination">
+              <text class="type-emoji">💉</text>
+            </view>
+            <text class="type-label">疫苗接种</text>
+          </view>
+          <view
+            class="type-card {{recordType === 'illness' ? 'active' : ''}}"
+            bindtap="onTypeChange"
+            data-value="illness">
+            <view class="type-icon-wrapper illness">
+              <text class="type-emoji">🤒</text>
+            </view>
+            <text class="type-label">生病记录</text>
+          </view>
+          <view
+            class="type-card {{recordType === 'medication' ? 'active' : ''}}"
+            bindtap="onTypeChange"
+            data-value="medication">
+            <view class="type-icon-wrapper medication">
+              <text class="type-emoji">💊</text>
+            </view>
+            <text class="type-label">用药记录</text>
+          </view>
+          <view
+            class="type-card {{recordType === 'checkup' ? 'active' : ''}}"
+            bindtap="onTypeChange"
+            data-value="checkup">
+            <view class="type-icon-wrapper checkup">
+              <text class="type-emoji">🏥</text>
+            </view>
+            <text class="type-label">体检记录</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 标题 -->
+      <view class="form-card">
+        <view class="card-label">
+          <text class="label-text">标题</text>
+          <text class="label-required">*</text>
+          <text class="char-count">{{title.length}}/50</text>
+        </view>
+        <view class="input-wrapper">
+          <input
+            class="form-input"
+            placeholder="例如：狂犬疫苗接种、感冒治疗..."
+            value="{{title}}"
+            bindinput="onTitleInput"
+            maxlength="50"
+            placeholder-class="input-placeholder"
+          />
+        </view>
+      </view>
+
+      <!-- 日期选择 -->
+      <view class="form-card">
+        <view class="card-label">
+          <text class="label-text">记录日期</text>
+        </view>
+        <view class="date-wrapper" bindtap="onShowDatePicker">
+          <text class="date-text {{recordDate ? '' : 'placeholder'}}">{{recordDate || '选择日期'}}</text>
+          <text class="date-icon">📅</text>
+        </view>
+      </view>
+
+      <!-- 疫苗接种专用字段 -->
+      <block wx:if="{{recordType === 'vaccination'}}">
+        <view class="form-card">
+          <view class="card-label">
+            <text class="label-text">疫苗名称</text>
+          </view>
+          <view class="input-wrapper">
+            <input
+              class="form-input"
+              placeholder="例如：狂犬病疫苗、六联疫苗..."
+              value="{{vaccineName}}"
+              bindinput="onVaccineNameInput"
+              placeholder-class="input-placeholder"
+            />
+          </view>
+        </view>
+
+        <view class="form-card">
+          <view class="card-label">
+            <text class="label-text">下次接种日期</text>
+          </view>
+          <view class="date-wrapper" bindtap="onShowNextDatePicker">
+            <text class="date-text {{nextVaccinationDate ? '' : 'placeholder'}}">{{nextVaccinationDate || '选择日期'}}</text>
+            <text class="date-icon">📅</text>
+          </view>
+        </view>
+      </block>
+
+      <!-- 生病记录专用字段 -->
+      <block wx:if="{{recordType === 'illness'}}">
+        <view class="form-card">
+          <view class="card-label">
+            <text class="label-text">症状描述</text>
+          </view>
+          <view class="textarea-wrapper">
+            <textarea
+              class="form-textarea"
+              placeholder="描述宠物的症状..."
+              value="{{symptoms}}"
+              bindinput="onSymptomsInput"
+              maxlength="500"
+              auto-height
+              placeholder-class="input-placeholder"
+            />
+          </view>
+        </view>
+
+        <view class="form-card">
+          <view class="card-label">
+            <text class="label-text">诊断结果</text>
+          </view>
+          <view class="input-wrapper">
+            <input
+              class="form-input"
+              placeholder="兽医的诊断结果"
+              value="{{diagnosis}}"
+              bindinput="onDiagnosisInput"
+              placeholder-class="input-placeholder"
+            />
+          </view>
+        </view>
+
+        <view class="form-card">
+          <view class="card-label">
+            <text class="label-text">结束日期</text>
+          </view>
+          <view class="date-wrapper" bindtap="onShowEndDatePicker">
+            <text class="date-text {{endDate ? '' : 'placeholder'}}">{{endDate || '选择日期（康复日期）'}}</text>
+            <text class="date-icon">📅</text>
+          </view>
+        </view>
+
+        <view class="form-card">
+          <view class="card-label">
+            <text class="label-text">医院/诊所</text>
+          </view>
+          <view class="input-wrapper">
+            <input
+              class="form-input"
+              placeholder="就诊的医院或诊所名称"
+              value="{{hospital}}"
+              bindinput="onHospitalInput"
+              placeholder-class="input-placeholder"
+            />
+          </view>
+        </view>
+      </block>
+
+      <!-- 用药记录专用字段 -->
+      <block wx:if="{{recordType === 'medication'}}">
+        <view class="form-card">
+          <view class="card-label">
+            <text class="label-text">药品名称</text>
+          </view>
+          <view class="input-wrapper">
+            <input
+              class="form-input"
+              placeholder="药品名称"
+              value="{{medicineName}}"
+              bindinput="onMedicineNameInput"
+              placeholder-class="input-placeholder"
+            />
+          </view>
+        </view>
+
+        <view class="form-card">
+          <view class="card-label">
+            <text class="label-text">剂量</text>
+          </view>
+          <view class="input-wrapper">
+            <input
+              class="form-input"
+              placeholder="例如：1片、2ml..."
+              value="{{dosage}}"
+              bindinput="onDosageInput"
+              placeholder-class="input-placeholder"
+            />
+          </view>
+        </view>
+
+        <view class="form-card">
+          <view class="card-label">
+            <text class="label-text">用法频率</text>
+          </view>
+          <view class="input-wrapper">
+            <input
+              class="form-input"
+              placeholder="例如：每日2次、饭后服用..."
+              value="{{frequency}}"
+              bindinput="onFrequencyInput"
+              placeholder-class="input-placeholder"
+            />
+          </view>
+        </view>
+
+        <view class="form-card">
+          <view class="card-label">
+            <text class="label-text">用药天数</text>
+          </view>
+          <view class="input-wrapper">
+            <input
+              class="form-input"
+              type="number"
+              placeholder="连续用药天数"
+              value="{{durationDays}}"
+              bindinput="onDurationDaysInput"
+              placeholder-class="input-placeholder"
+            />
+          </view>
+        </view>
+      </block>
+
+      <!-- 体检记录专用字段 -->
+      <block wx:if="{{recordType === 'checkup'}}">
+        <view class="form-row">
+          <view class="form-card half">
+            <view class="card-label">
+              <text class="label-text">体重 (kg)</text>
+            </view>
+            <view class="input-wrapper">
+              <input
+                class="form-input"
+                type="digit"
+                placeholder="体重"
+                value="{{weight}}"
+                bindinput="onWeightInput"
+                placeholder-class="input-placeholder"
+              />
+            </view>
+          </view>
+
+          <view class="form-card half">
+            <view class="card-label">
+              <text class="label-text">体温 (°C)</text>
+            </view>
+            <view class="input-wrapper">
+              <input
+                class="form-input"
+                type="digit"
+                placeholder="体温"
+                value="{{temperature}}"
+                bindinput="onTemperatureInput"
+                placeholder-class="input-placeholder"
+              />
+            </view>
+          </view>
+        </view>
+
+        <view class="form-card">
+          <view class="card-label">
+            <text class="label-text">心率 (次/分)</text>
+          </view>
+          <view class="input-wrapper">
+            <input
+              class="form-input"
+              type="number"
+              placeholder="心率"
+              value="{{heartRate}}"
+              bindinput="onHeartRateInput"
+              placeholder-class="input-placeholder"
+            />
+          </view>
+        </view>
+
+        <view class="form-card">
+          <view class="card-label">
+            <text class="label-text">检查结果</text>
+          </view>
+          <view class="textarea-wrapper">
+            <textarea
+              class="form-textarea"
+              placeholder="体检结果、医生建议等..."
+              value="{{checkupResult}}"
+              bindinput="onCheckupResultInput"
+              maxlength="500"
+              auto-height
+              placeholder-class="input-placeholder"
+            />
+          </view>
+        </view>
+      </block>
+
+      <!-- 通用字段 -->
+      <view class="form-card">
+        <view class="card-label">
+          <text class="label-text">备注说明</text>
+        </view>
+        <view class="textarea-wrapper">
+          <textarea
+            class="form-textarea"
+            placeholder="其他需要记录的信息..."
+            value="{{notes}}"
+            bindinput="onNotesInput"
+            maxlength="500"
+            auto-height
+            placeholder-class="input-placeholder"
+          />
+        </view>
+      </view>
+
+      <view class="form-card">
+        <view class="card-label">
+          <text class="label-text">费用</text>
+        </view>
+        <view class="input-wrapper">
+          <input
+            class="form-input"
+            type="digit"
+            placeholder="医疗费用（元）"
+            value="{{cost}}"
+            bindinput="onCostInput"
+            placeholder-class="input-placeholder"
+          />
+        </view>
+      </view>
+
+      <!-- 底部间距 -->
+      <view class="bottom-spacer"></view>
+    </view>
+  </scroll-view>
+
+  <!-- 底部提交按钮 -->
+  <view class="submit-bar">
+    <view class="submit-btn {{submitting ? 'loading' : ''}}" bindtap="onSubmit">
+      <text class="btn-text">{{submitting ? '保存中...' : '保存记录'}}</text>
+    </view>
+  </view>
+</view>

@@ -66,14 +66,17 @@ Page({
       // 加载成长日志
       const logs = await api.pet.getGrowthLogs(currentPet.id, 3)
       this.setData({
-        todayDiary: logs.map(log => ({
-          id: log.id,
-          emoji: this.getEmojiByType(log.log_type),
-          bgColor: this.getBgColorByType(log.log_type),
-          time: new Date(log.created_at).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' }),
-          title: log.title,
-          description: log.content
-        }))
+        todayDiary: logs.map(log => {
+          const config = api.pet.getLogTypeConfig(log.log_type)
+          return {
+            id: log.id,
+            image: config.image,
+            bgColor: config.bgColor,
+            time: new Date(log.created_at).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' }),
+            title: log.title,
+            description: log.content
+          }
+        })
       })
 
       // 加载最新朋友圈
@@ -95,24 +98,6 @@ Page({
       console.error('加载数据失败', error)
       wx.showToast({ title: '加载失败', icon: 'none' })
     }
-  },
-
-  getEmojiByType(type) {
-    const emojiMap = {
-      'activity': '🏃',
-      'sleep': '🌙',
-      'milestone': '🐕'
-    }
-    return emojiMap[type] || '📝'
-  },
-
-  getBgColorByType(type) {
-    const colorMap = {
-      'activity': '#E8F5E9',
-      'sleep': '#E3F2FD',
-      'milestone': '#FFF3E0'
-    }
-    return colorMap[type] || '#F5F5F5'
   },
 
   formatTime(dateStr) {

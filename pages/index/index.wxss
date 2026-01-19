@@ -326,8 +326,11 @@ page {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 32rpx;
   margin-right: 20rpx;
+}
+.diary-icon-img {
+  width: 40rpx;
+  height: 40rpx;
 }
 .diary-content {
   flex: 1;
