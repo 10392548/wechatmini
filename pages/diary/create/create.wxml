@@ -1,0 +1,115 @@
+<!--pages/diary/create/create.wxml-->
+<navigation-bar title="记录成长" back="{{true}}" color="black" background="#FFF"></navigation-bar>
+
+<view class="page-container">
+  <scroll-view class="content-scroll" scroll-y show-scrollbar="{{false}}">
+    <view class="content-inner">
+
+      <!-- 顶部装饰 -->
+      <view class="header-decoration">
+        <image class="header-image" src="/images/video.png" mode="aspectFit"></image>
+        <text class="header-title">记录美好瞬间</text>
+        <text class="header-subtitle">为 {{petName}} 留下珍贵回忆</text>
+      </view>
+
+      <!-- 日志类型选择 -->
+      <view class="form-card">
+        <view class="card-label">
+          <text class="label-text">选择类型</text>
+          <text class="label-required">*</text>
+        </view>
+        <view class="type-grid">
+          <view
+            class="type-card {{logType === 'milestone' ? 'active' : ''}}"
+            bindtap="onTypeChange"
+            data-value="milestone">
+            <view class="type-icon-wrapper milestone">
+              <image class="type-image" src="/images/Milestone.png" mode="aspectFit"></image>
+            </view>
+            <text class="type-label">里程碑</text>
+            <text class="type-desc">第一次的成长</text>
+          </view>
+          <view
+            class="type-card {{logType === 'activity' ? 'active' : ''}}"
+            bindtap="onTypeChange"
+            data-value="activity">
+            <view class="type-icon-wrapper activity">
+              <image class="type-image" src="/images/Activity.png" mode="aspectFit"></image>
+            </view>
+            <text class="type-label">活动</text>
+            <text class="type-desc">日常运动玩耍</text>
+          </view>
+          <view
+            class="type-card {{logType === 'sleep' ? 'active' : ''}}"
+            bindtap="onTypeChange"
+            data-value="sleep">
+            <view class="type-icon-wrapper sleep">
+              <image class="type-image" src="/images/sleep.png" mode="aspectFit"></image>
+            </view>
+            <text class="type-label">睡眠</text>
+            <text class="type-desc">休息睡眠记录</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 标题输入 -->
+      <view class="form-card">
+        <view class="card-label">
+          <text class="label-text">标题</text>
+          <text class="label-required">*</text>
+          <text class="char-count">{{title.length}}/50</text>
+        </view>
+        <view class="input-wrapper">
+          <input
+            class="title-input"
+            placeholder="例如：第一次出门、学会握手..."
+            value="{{title}}"
+            bindinput="onTitleInput"
+            maxlength="50"
+            placeholder-class="input-placeholder"
+          />
+          <view class="input-icon" wx:if="{{title.length > 0}}">
+            <text>✓</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 内容输入 -->
+      <view class="form-card">
+        <view class="card-label">
+          <text class="label-text">详细内容</text>
+          <text class="char-count">{{content.length}}/500</text>
+        </view>
+        <view class="textarea-wrapper">
+          <textarea
+            class="content-input"
+            placeholder="记录下这个特别的时刻..."
+            value="{{content}}"
+            bindinput="onContentInput"
+            maxlength="500"
+            auto-height
+            placeholder-class="input-placeholder"
+            fixed="{{true}}"
+          />
+        </view>
+      </view>
+
+      <!-- 底部间距 -->
+      <view class="bottom-spacer"></view>
+    </view>
+  </scroll-view>
+
+  <!-- 底部提交按钮 -->
+  <view class="submit-bar">
+    <view
+      class="submit-btn {{submitting ? 'loading' : ''}}"
+      bindtap="onSubmit">
+      <view class="btn-content" wx:if="{{!submitting}}">
+        <text class="btn-text">保存记录</text>
+      </view>
+      <view class="btn-loading" wx:else>
+        <text class="loading-text">保存中...</text>
+      </view>
+    </view>
+  </view>
+</view>

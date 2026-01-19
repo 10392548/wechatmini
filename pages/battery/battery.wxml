@@ -1,46 +1,142 @@
 <!--pages/battery/battery.wxml-->
 <navigation-bar title="电池状态" back="{{true}}" color="black" background="#FFF"></navigation-bar>
-<view class="page-content">
-  <view class="battery-section">
-    <view class="battery-circle">
-      <canvas canvas-id="batteryCanvas" class="canvas"></canvas>
-      <view class="battery-info">
-        <text class="battery-percent">{{battery}}%</text>
-        <text class="battery-status">{{status}}</text>
+<view class="page">
+  <!-- 电池主卡片 -->
+  <view class="battery-card {{batteryClass}}">
+    <view class="battery-visual">
+      <!-- 电池图标 -->
+      <view class="battery-icon">
+        <view class="battery-head"></view>
+        <view class="battery-body">
+          <view class="battery-fill" style="width: {{battery}}%; background: {{batteryColor}}"></view>
+          <!-- 闪电充电动画 -->
+          <view class="charging-indicator" wx:if="{{isCharging}}">
+            <view class="lightning"></view>
+          </view>
+        </view>
       </view>
+
+      <!-- 百分比显示 -->
+      <view class="battery-percent-display">
+        <text class="percent-number">{{battery}}</text>
+        <text class="percent-symbol">%</text>
+      </view>
+    </view>
+
+    <!-- 状态信息 -->
+    <view class="battery-status-info">
+      <text class="status-text">{{batteryText}}</text>
+      <text class="estimate-time" wx:if="{{estimateTime}}">预计可用 {{estimateTime}}</text>
     </view>
   </view>
 
-  <view class="content">
-    <view class="power-mode">
-      <view class="mode-icon">🔋</view>
-      <view class="mode-info">
-        <text class="mode-title">超级省电模式</text>
-        <text class="mode-desc">保证重要基本功能</text>
+  <!-- 设备状态卡片 -->
+  <view class="status-card">
+    <view class="status-header">
+      <view class="status-icon {{isOnline ? 'online' : 'offline'}}">
+        <view class="status-dot"></view>
+      </view>
+      <view class="status-info">
+        <text class="status-title">设备状态</text>
+        <text class="status-value {{isOnline ? 'online' : 'offline'}}">{{isOnline ? '在线' : '离线'}}</text>
+      </view>
+    </view>
+    <view class="status-footer">
+      <text class="last-online">最后在线: {{lastOnlineTime}}</text>
+    </view>
+  </view>
+
+  <!-- 功能设置卡片 -->
+  <view class="settings-card">
+    <view class="setting-item">
+      <view class="setting-left">
+        <view class="setting-icon" style="background: #FFF3E0">
+          <text class="icon-emoji">🔋</text>
+        </view>
+        <view class="setting-info">
+          <text class="setting-title">超级省电模式</text>
+          <text class="setting-desc">降低定位频率，延长续航</text>
+        </view>
       </view>
       <switch checked="{{powerSaveMode}}" bindchange="togglePowerMode" color="#FF8C00"/>
     </view>
 
-    <view class="usage-section">
-      <text class="section-title">耗电排行</text>
-      <view class="usage-item">
-        <view class="usage-info">
-          <text class="usage-name">GPS定位</text>
-          <text class="usage-percent">65%</text>
+    <view class="setting-item border-top">
+      <view class="setting-left">
+        <view class="setting-icon" style="background: #E3F2FD">
+          <text class="icon-emoji">📍</text>
         </view>
-        <view class="progress-bar">
-          <view class="progress-fill blue" style="width: 65%"></view>
+        <view class="setting-info">
+          <text class="setting-title">定位频率</text>
+          <text class="setting-desc">{{frequencyOptions[frequencyIndex]}}</text>
+        </view>
+      </view>
+      <view class="setting-arrow">></view>
+    </view>
+  </view>
+
+  <!-- 电量消耗卡片 -->
+  <view class="usage-card">
+    <view class="usage-header">
+      <text class="usage-title">电量消耗</text>
+      <text class="usage-period">今日</text>
+    </view>
+    <view class="usage-list">
+      <view class="usage-item">
+        <view class="usage-item-left">
+          <view class="usage-dot" style="background: #2196F3"></view>
+          <text class="usage-name">GPS定位</text>
+        </view>
+        <view class="usage-bar-container">
+          <view class="usage-bar">
+            <view class="usage-bar-fill blue" style="width: 65%"></view>
+          </view>
+          <text class="usage-percent">65%</text>
         </view>
       </view>
       <view class="usage-item">
-        <view class="usage-info">
+        <view class="usage-item-left">
+          <view class="usage-dot" style="background: #FF9800"></view>
           <text class="usage-name">传感器</text>
+        </view>
+        <view class="usage-bar-container">
+          <view class="usage-bar">
+            <view class="usage-bar-fill orange" style="width: 20%"></view>
+          </view>
           <text class="usage-percent">20%</text>
         </view>
-        <view class="progress-bar">
-          <view class="progress-fill orange" style="width: 20%"></view>
+      </view>
+      <view class="usage-item">
+        <view class="usage-item-left">
+          <view class="usage-dot" style="background: #4CAF50"></view>
+          <text class="usage-name">网络通信</text>
+        </view>
+        <view class="usage-bar-container">
+          <view class="usage-bar">
+            <view class="usage-bar-fill green" style="width: 15%"></view>
+          </view>
+          <text class="usage-percent">15%</text>
         </view>
       </view>
     </view>
   </view>
+
+  <!-- 电池健康卡片 -->
+  <view class="health-card">
+    <view class="health-header">
+      <view class="health-icon" style="background: #E8F5E9">
+        <text class="icon-emoji">💚</text>
+      </view>
+      <view class="health-info">
+        <text class="health-title">电池健康度</text>
+        <text class="health-value">良好 {{healthPercent}}%</text>
+      </view>
+    </view>
+    <view class="health-bar">
+      <view class="health-bar-fill" style="width: {{healthPercent}}%"></view>
+    </view>
+  </view>
+
+  <!-- 底部间距 -->
+  <view style="height: 40rpx"></view>
 </view>

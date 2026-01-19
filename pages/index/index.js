@@ -46,6 +46,7 @@ Page({
       this.setData({
         pet: {
           name: currentPet.name,
+          avatar: currentPet.avatar || '/images/pet.png',
           status: '在家开心',
           battery: currentPet.device?.battery_level || 0
         },
@@ -82,6 +83,7 @@ Page({
         this.setData({
           latestMoment: {
             nickname: moment.user.nickname,
+            avatar: moment.user.avatar || '/images/pet.png',
             time: this.formatTime(moment.created_at),
             content: moment.content,
             likes: moment.like_count,

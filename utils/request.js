@@ -109,6 +109,11 @@ function request(options) {
     header.Authorization = `Bearer ${token}`
   }
 
+  // 设置 JSON 内容类型
+  if (method === 'POST' || method === 'PUT') {
+    header['Content-Type'] = 'application/json'
+  }
+
   return new Promise((resolve, reject) => {
     wx.request({
       url: `${config.baseURL}${url}`,

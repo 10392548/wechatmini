@@ -4,7 +4,7 @@
   <!-- 宠物信息卡片 -->
   <view class="pet-card">
     <view class="pet-avatar-wrapper">
-      <image class="pet-avatar" src="/images/pet.png" mode="aspectFill"></image>
+      <image class="pet-avatar" src="{{pet.avatar || '/images/pet.png'}}" mode="aspectFill"></image>
       <view class="status-dot"></view>
     </view>
     <view class="pet-info">
@@ -105,7 +105,7 @@
     </view>
     <view class="moment-preview">
       <view class="moment-header">
-        <image class="moment-avatar" src="/images/pet.png" mode="aspectFill"></image>
+        <image class="moment-avatar" src="{{latestMoment.avatar || '/images/pet.png'}}" mode="aspectFill"></image>
         <view class="moment-info">
           <text class="moment-nickname">{{latestMoment.nickname}}</text>
           <text class="moment-time">{{latestMoment.time}}</text>
@@ -114,11 +114,11 @@
       <text class="moment-content">{{latestMoment.content}}</text>
       <view class="moment-actions">
         <view class="moment-action">
-          <text class="action-emoji">❤️</text>
+          <image class="action-icon" src="/images/Like.png" mode="aspectFit"></image>
           <text class="action-count">{{latestMoment.likes}}</text>
         </view>
         <view class="moment-action">
-          <text class="action-emoji">💬</text>
+          <image class="action-icon" src="/images/Comment.png" mode="aspectFit"></image>
           <text class="action-count">{{latestMoment.comments}}</text>
         </view>
       </view>

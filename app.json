@@ -12,6 +12,7 @@
     "pages/chat/chat",
     "pages/activity/activity",
     "pages/diary/diary",
+    "pages/diary/create/create",
     "pages/battery/battery"
   ],
   "tabBar": {

@@ -128,7 +128,61 @@ router.get('/:id/stats/today', authMiddleware, async (req: AuthRequest, res) => 
 router.get('/:id/growth-logs', authMiddleware, async (req: AuthRequest, res) => {
   try {
     const { id } = req.params;
-    const { limit = 20 } = req.query;
+    const { limit = 50, log_type } = req.query;
+
+    const petRepo = AppDataSource.getRepository(Pet);
+    const pet = await petRepo.findOne({ where: { id: parseInt(id), user_id: req.userId } });
+
+    if (!pet) {
+      return res.status(404).json({ code: 404, message: 'Pet not found', data: null });
+    }
+
+    // 验证 log_type
+    const validTypes = ['activity', 'sleep', 'milestone'];
+    if (log_type && !validTypes.includes(log_type as string)) {
+      return res.status(400).json({ code: 400, message: 'Invalid log_type', data: null });
+    }
+
+    const logRepo = AppDataSource.getRepository(GrowthLog);
+    const where: any = { pet_id: parseInt(id) };
+    if (log_type) {
+      where.log_type = log_type;
+    }
+
+    // 限制最大返回数量
+    const take = Math.min(Number(limit), 100);
+
+    const logs = await logRepo.find({
+      where,
+      order: { created_at: 'DESC' },
+      take
+    });
+
+    res.json({ code: 0, message: 'Success', data: logs });
+  } catch (error) {
+    console.error('Failed to get growth logs:', error);
+    res.status(500).json({ code: 500, message: 'Failed to get growth logs', data: null });
+  }
+});
+
+// 创建成长日志
+router.post('/:id/growth-logs', authMiddleware, async (req: AuthRequest, res) => {
+  try {
+    const { id } = req.params;
+    const { log_type, title, content, data } = req.body;
+
+    if (!log_type || !title) {
+      return res.status(400).json({ code: 400, message: 'log_type and title are required', data: null });
+    }
+
+    if (title.length > 100) {
+      return res.status(400).json({ code: 400, message: 'Title is too long (max 100 characters)', data: null });
+    }
+
+    const validTypes = ['activity', 'sleep', 'milestone'];
+    if (!validTypes.includes(log_type)) {
+      return res.status(400).json({ code: 400, message: 'Invalid log_type', data: null });
+    }
 
     const petRepo = AppDataSource.getRepository(Pet);
     const pet = await petRepo.findOne({ where: { id: parseInt(id), user_id: req.userId } });
@@ -138,15 +192,82 @@ router.get('/:id/growth-logs', authMiddleware, async (req: AuthRequest, res) => 
     }
 
     const logRepo = AppDataSource.getRepository(GrowthLog);
-    const logs = await logRepo.find({
-      where: { pet_id: parseInt(id) },
-      order: { created_at: 'DESC' },
-      take: Number(limit)
+    const log = logRepo.create({
+      pet_id: parseInt(id),
+      log_type,
+      title,
+      content,
+      data
     });
 
-    res.json({ code: 0, message: 'Success', data: logs });
+    await logRepo.save(log);
+    res.json({ code: 0, message: 'Success', data: log });
   } catch (error) {
-    res.status(500).json({ code: 500, message: 'Failed to get growth logs', data: null });
+    console.error('Failed to create growth log:', error);
+    res.status(500).json({ code: 500, message: 'Failed to create growth log', data: null });
+  }
+});
+
+// 更新成长日志
+router.put('/:id/growth-logs/:logId', authMiddleware, async (req: AuthRequest, res) => {
+  try {
+    const { id, logId } = req.params;
+    const { title, content, data } = req.body;
+
+    const petRepo = AppDataSource.getRepository(Pet);
+    const pet = await petRepo.findOne({ where: { id: parseInt(id), user_id: req.userId } });
+
+    if (!pet) {
+      return res.status(404).json({ code: 404, message: 'Pet not found', data: null });
+    }
+
+    const logRepo = AppDataSource.getRepository(GrowthLog);
+    const log = await logRepo.findOne({
+      where: { id: parseInt(logId), pet_id: parseInt(id) }
+    });
+
+    if (!log) {
+      return res.status(404).json({ code: 404, message: 'Growth log not found', data: null });
+    }
+
+    if (title !== undefined) log.title = title;
+    if (content !== undefined) log.content = content;
+    if (data !== undefined) log.data = data;
+
+    await logRepo.save(log);
+    res.json({ code: 0, message: 'Success', data: log });
+  } catch (error) {
+    console.error('Failed to update growth log:', error);
+    res.status(500).json({ code: 500, message: 'Failed to update growth log', data: null });
+  }
+});
+
+// 删除成长日志
+router.delete('/:id/growth-logs/:logId', authMiddleware, async (req: AuthRequest, res) => {
+  try {
+    const { id, logId } = req.params;
+
+    const petRepo = AppDataSource.getRepository(Pet);
+    const pet = await petRepo.findOne({ where: { id: parseInt(id), user_id: req.userId } });
+
+    if (!pet) {
+      return res.status(404).json({ code: 404, message: 'Pet not found', data: null });
+    }
+
+    const logRepo = AppDataSource.getRepository(GrowthLog);
+    const log = await logRepo.findOne({
+      where: { id: parseInt(logId), pet_id: parseInt(id) }
+    });
+
+    if (!log) {
+      return res.status(404).json({ code: 404, message: 'Growth log not found', data: null });
+    }
+
+    await logRepo.remove(log);
+    res.json({ code: 0, message: 'Success', data: { deleted: true } });
+  } catch (error) {
+    console.error('Failed to delete growth log:', error);
+    res.status(500).json({ code: 500, message: 'Failed to delete growth log', data: null });
   }
 });
 

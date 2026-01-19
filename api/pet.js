@@ -27,7 +27,24 @@ module.exports = {
   },
 
   // 获取成长日志
-  getGrowthLogs(petId, limit = 20) {
-    return request.get(`/api/pet/${petId}/growth-logs`, { limit })
+  getGrowthLogs(petId, limit = 50, logType) {
+    const params = { limit }
+    if (logType) params.log_type = logType
+    return request.get(`/api/pet/${petId}/growth-logs`, params)
+  },
+
+  // 创建成长日志
+  createGrowthLog(petId, data) {
+    return request.post(`/api/pet/${petId}/growth-logs`, data)
+  },
+
+  // 更新成长日志
+  updateGrowthLog(petId, logId, data) {
+    return request.put(`/api/pet/${petId}/growth-logs/${logId}`, data)
+  },
+
+  // 删除成长日志
+  deleteGrowthLog(petId, logId) {
+    return request.delete(`/api/pet/${petId}/growth-logs/${logId}`)
   }
 }

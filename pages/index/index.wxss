@@ -294,9 +294,10 @@ page {
   align-items: center;
   margin-right: 40rpx;
 }
-.action-emoji {
-  font-size: 28rpx;
-  margin-right: 8rpx;
+.action-icon {
+  width: 36rpx;
+  height: 36rpx;
+  margin-right: 12rpx;
 }
 .action-count {
   font-size: 24rpx;

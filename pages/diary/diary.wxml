@@ -1,37 +1,92 @@
 <!--pages/diary/diary.wxml-->
 <navigation-bar title="成长日志" back="{{true}}" color="black" background="#FFF"></navigation-bar>
-<view class="page-content">
+
+<view class="page-container">
   <!-- 标签切换 -->
-  <view class="tabs-container">
-    <view class="tab-item {{activeTab === 0 ? 'active' : ''}}" data-index="0" bindtap="onTabChange">每日回顾</view>
-    <view class="tab-item {{activeTab === 1 ? 'active' : ''}}" data-index="1" bindtap="onTabChange">健康报告</view>
+  <view class="tabs-wrapper">
+    <view class="tabs-card">
+      <view
+        class="tab-item {{activeTab === 0 ? 'active' : ''}}"
+        bindtap="onTabChange"
+        data-index="0">
+        <text class="tab-text">每日回顾</text>
+        <view class="tab-indicator" wx:if="{{activeTab === 0}}"></view>
+      </view>
+      <view
+        class="tab-item {{activeTab === 1 ? 'active' : ''}}"
+        bindtap="onTabChange"
+        data-index="1">
+        <text class="tab-text">健康报告</text>
+        <view class="tab-indicator" wx:if="{{activeTab === 1}}"></view>
+      </view>
+    </view>
   </view>
 
-  <!-- 时间线列表 -->
-  <view class="diary-list">
-    <block wx:if="{{activeTab === 0}}">
-      <view class="diary-item" wx:for="{{diaryList}}" wx:key="id" style="background: {{item.bgColor}};">
-        <view class="item-left">
-          <view class="icon-wrapper" style="background: {{item.iconColor}};">{{item.emoji}}</view>
-        </view>
-        <view class="item-content">
-          <view class="item-time">{{item.time}}</view>
-          <view class="item-title">{{item.title}}</view>
-          <view class="item-desc">{{item.description}}</view>
+  <!-- 内容区域 -->
+  <scroll-view class="content-scroll" scroll-y show-scrollbar="{{false}}" bindrefresherrefresh="onRefresh" refresher-enabled="{{true}}" refresher-triggered="{{refreshing}}">
+    <view class="content-inner">
+
+      <!-- 每日回顾 -->
+      <view class="logs-container" wx:if="{{activeTab === 0}}">
+        <!-- 日期分组 -->
+        <block wx:if="{{diaryList.length > 0}}">
+          <view class="log-item" wx:for="{{diaryList}}" wx:key="id">
+            <view class="log-left">
+              <view class="log-time-column">
+                <text class="log-time">{{item.time}}</text>
+              </view>
+            </view>
+            <view class="log-card">
+              <view class="log-icon-wrapper">
+                <image class="log-icon" src="{{item.image}}" mode="aspectFit"></image>
+              </view>
+              <view class="log-content">
+                <text class="log-title">{{item.title}}</text>
+                <text class="log-desc" wx:if="{{item.description}}">{{item.description}}</text>
+              </view>
+            </view>
+          </view>
+        </block>
+
+        <!-- 空状态 -->
+        <view class="empty-container" wx:if="{{diaryList.length === 0 && !loading}}">
+          <text class="empty-emoji">📝</text>
+          <text class="empty-title">还没有成长记录</text>
+          <text class="empty-desc">点击右下角按钮记录第一个瞬间</text>
         </view>
       </view>
-    </block>
-    <block wx:if="{{activeTab === 1}}">
-      <view class="diary-item" wx:for="{{healthReports}}" wx:key="id" style="background: {{item.bgColor}};">
-        <view class="item-left">
-          <view class="icon-wrapper" style="background: {{item.iconColor}};">{{item.emoji}}</view>
-        </view>
-        <view class="item-content">
-          <view class="item-time">{{item.time}}</view>
-          <view class="item-title">{{item.title}}</view>
-          <view class="item-desc">{{item.description}}</view>
+
+      <!-- 健康报告 -->
+      <view class="logs-container" wx:if="{{activeTab === 1}}">
+        <block wx:if="{{healthReports.length > 0}}">
+          <view class="health-item" wx:for="{{healthReports}}" wx:key="id">
+            <view class="health-card">
+              <view class="health-header">
+                <view class="health-icon">
+                  <image class="health-icon-img" src="{{item.image}}" mode="aspectFit"></image>
+                </view>
+                <text class="health-time">{{item.time}}</text>
+              </view>
+              <text class="health-title">{{item.title}}</text>
+              <text class="health-desc" wx:if="{{item.description}}">{{item.description}}</text>
+            </view>
+          </view>
+        </block>
+
+        <!-- 空状态 -->
+        <view class="empty-container" wx:if="{{healthReports.length === 0 && !loading}}">
+          <text class="empty-emoji">😴</text>
+          <text class="empty-title">暂无睡眠记录</text>
+          <text class="empty-desc">睡眠数据将自动同步到这里</text>
         </view>
       </view>
-    </block>
-  </view>
+
+    </view>
+  </scroll-view>
+</view>
+
+<!-- 浮动创建按钮 -->
+<view class="fab" bindtap="onCreateLog">
+  <text class="fab-icon">+</text>
+  <view class="fab-ring"></view>
 </view>
