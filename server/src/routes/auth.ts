@@ -93,12 +93,22 @@ router.post('/login', async (req, res) => {
     let user = await userRepo.findOne({ where: { openid } });
 
     if (!user) {
-      user = userRepo.create({ openid, nickname, avatar });
+      // 首次登录：创建新用户，使用微信头像和昵称
+      user = userRepo.create({
+        openid,
+        nickname: nickname || '微信用户',
+        avatar: avatar || '',
+        has_custom_profile: 0
+      });
       await userRepo.save(user);
-    } else if (nickname || avatar) {
-      if (nickname) user.nickname = nickname;
-      if (avatar) user.avatar = avatar;
-      await userRepo.save(user);
+    } else {
+      // 老用户：只在未自定义过资料时更新
+      if (!user.has_custom_profile) {
+        if (nickname) user.nickname = nickname;
+        if (avatar) user.avatar = avatar;
+        await userRepo.save(user);
+      }
+      // 如果已经自定义过资料（has_custom_profile = 1），不更新头像和昵称
     }
 
     const accessToken = generateAccessToken(user.id);

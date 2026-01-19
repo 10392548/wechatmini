@@ -16,6 +16,12 @@ export class User {
   @Column({ nullable: true })
   avatar: string;
 
+  @Column({ nullable: true })
+  phone: string;
+
+  @Column({ default: 0 })
+  has_custom_profile: number;
+
   @CreateDateColumn()
   created_at: Date;
 

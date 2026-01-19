@@ -60,12 +60,20 @@ Page({
         .filter(pet => pet.device)
         .map(pet => {
           console.log('设备数据:', pet.device)
+          // 格式化绑定时间
+          const createdAt = pet.device.created_at
+          let bindTime = '未知'
+          if (createdAt) {
+            const date = new Date(createdAt)
+            bindTime = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+          }
+
           return {
             id: pet.device.id,
-            imei: pet.device.imei,
+            imei: pet.device.device_sn,
             petName: pet.name,
             battery: pet.device.battery_level || 0,
-            bindTime: pet.device.created_at || new Date().toLocaleDateString()
+            bindTime: bindTime
           }
         })
 

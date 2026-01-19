@@ -29,20 +29,7 @@
     </view>
   </view>
 
-  <!-- 已绑定设备 -->
-  <view class="section-card" wx:if="{{devices.length > 0}}">
-    <view class="section-title">已绑定设备</view>
-    <view class="device-list">
-      <view class="device-item" wx:for="{{devices}}" wx:key="id">
-        <view class="device-icon">📱</view>
-        <view class="device-info">
-          <text class="device-name">{{item.petName || ('设备 ' + (index + 1))}}</text>
-          <text class="device-imei">IMEI: {{item.imei}}</text>
-        </view>
-        <text class="device-time">{{item.bindTime}}</text>
-      </view>
-    </view>
-  </view>
+
 
   <!-- 设置选项 -->
   <view class="section-card">
@@ -61,6 +48,21 @@
         </view>
         <text class="menu-name">关于我们</text>
         <text class="menu-arrow">></text>
+      </view>
+    </view>
+  </view>
+  
+    <!-- 已绑定设备 -->
+  <view class="section-card" wx:if="{{devices.length > 0}}">
+    <view class="section-title">已绑定设备</view>
+    <view class="device-list">
+      <view class="device-item" wx:for="{{devices}}" wx:key="id">
+        <view class="device-icon">📱</view>
+        <view class="device-info">
+          <text class="device-name">{{item.petName || ('设备 ' + (index + 1))}}</text>
+          <text class="device-imei">IMEI: {{item.imei}}</text>
+        </view>
+        <text class="device-time">{{item.bindTime}}</text>
       </view>
     </view>
   </view>

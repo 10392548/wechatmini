@@ -138,6 +138,7 @@ Page({
     }
 
     let petId = selectedPetId
+    let newPet = null
 
     if (bindMode === 'new') {
       if (!petInfo.name) {
@@ -148,7 +149,7 @@ Page({
       try {
         this.setData({ binding: true })
 
-        const newPet = await api.pet.createPet({
+        newPet = await api.pet.createPet({
           name: petInfo.name,
           breed: petInfo.breed || '未知品种',
           gender: petInfo.gender,
@@ -174,7 +175,7 @@ Page({
       wx.showToast({ title: '绑定成功', icon: 'success', duration: 2000 })
 
       const app = getApp()
-      if (bindMode === 'new') {
+      if (bindMode === 'new' && newPet) {
         app.globalData.currentPet = newPet
       } else {
         const pet = this.data.existingPets.find(p => p.id === petId)
