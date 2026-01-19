@@ -44,9 +44,12 @@ Page({
       const app = getApp()
       app.globalData.userInfo = user
 
+      // 6. 加载宠物列表
+      await app.loadPets()
+
       wx.showToast({ title: '登录成功', icon: 'success' })
 
-      // 6. 跳转到首页
+      // 7. 跳转到首页
       setTimeout(() => {
         wx.switchTab({ url: '/pages/index/index' })
       }, 1500)

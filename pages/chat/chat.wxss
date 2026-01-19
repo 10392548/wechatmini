@@ -25,7 +25,7 @@ page {
   height: 80rpx;
   border-radius: 50%;
   margin-right: 20rpx;
-  background: linear-gradient(135deg, #FF8C00, #FFA500);
+  background: #f0f0f0;
   display: flex;
   align-items: center;
   justify-content: center;

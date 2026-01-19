@@ -5,11 +5,51 @@ Page({
     messages: [],
     inputText: '',
     scrollId: 'bottom',
-    sending: false
+    sending: false,
+    petName: '',
+    petAvatar: ''
   },
 
   async onLoad() {
+    await this.ensurePetLoaded()
     await this.loadHistory()
+  },
+
+  async onShow() {
+    await this.ensurePetLoaded()
+  },
+
+  async ensurePetLoaded() {
+    const app = getApp()
+
+    if (!app.globalData.currentPet) {
+      try {
+        await app.loadPets()
+      } catch (error) {
+        console.error('加载宠物失败', error)
+      }
+    }
+
+    const currentPet = app.globalData.currentPet
+    if (!currentPet) {
+      wx.showModal({
+        title: '提示',
+        content: '请先创建宠物',
+        confirmText: '去创建',
+        success: (res) => {
+          if (res.confirm) {
+            wx.navigateTo({ url: '/pages/bind/bind' })
+          }
+        }
+      })
+      return false
+    }
+
+    this.setData({
+      petName: currentPet.name,
+      petAvatar: currentPet.avatar || '/images/pet.png'
+    })
+    return true
   },
 
   async loadHistory() {
@@ -17,10 +57,7 @@ Page({
       const app = getApp()
       const currentPet = app.globalData.currentPet
 
-      if (!currentPet) {
-        wx.showToast({ title: '请先创建宠物', icon: 'none' })
-        return
-      }
+      if (!currentPet) return
 
       const history = await api.chat.getChatHistory(currentPet.id, 50)
       this.setData({
@@ -28,7 +65,8 @@ Page({
           type: msg.role === 'user' ? 'user' : 'pet',
           sender: msg.role === 'user' ? '主人' : currentPet.name,
           content: msg.content,
-          time: new Date(msg.created_at).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })
+          time: new Date(msg.created_at).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' }),
+          avatar: msg.role === 'user' ? '' : (currentPet.avatar || '/images/pet.png')
         })),
         scrollId: 'bottom'
       })
@@ -55,12 +93,12 @@ Page({
     const content = this.data.inputText.trim()
     this.setData({ inputText: '', sending: true })
 
-    // 添加用户消息到界面
     const userMessage = {
       type: 'user',
       sender: '主人',
       content,
-      time: new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })
+      time: new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' }),
+      avatar: ''
     }
 
     this.setData({
@@ -69,15 +107,14 @@ Page({
     })
 
     try {
-      // 调用 API 发送消息
       const { assistantMessage } = await api.chat.sendMessage(currentPet.id, content)
 
-      // 添加 AI 回复到界面
       const petReply = {
         type: 'pet',
         sender: currentPet.name,
         content: assistantMessage.content,
-        time: new Date(assistantMessage.created_at).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })
+        time: new Date(assistantMessage.created_at).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' }),
+        avatar: currentPet.avatar || '/images/pet.png'
       }
 
       this.setData({

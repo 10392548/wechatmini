@@ -1,5 +1,6 @@
 // app.js
 const tokenManager = require('./utils/token')
+const api = require('./api/index')
 
 App({
   globalData: {
@@ -7,13 +8,24 @@ App({
     currentPet: null
   },
 
-  onLaunch() {
-    // 检查登录状态
+  async onLaunch() {
     const token = tokenManager.getToken()
     if (!token) {
-      // 未登录，跳转到登录页
       wx.reLaunch({ url: '/pages/login/login' })
+      return
+    }
+
+    await this.loadPets()
+  },
+
+  async loadPets() {
+    try {
+      const pets = await api.pet.getPetList()
+      if (pets && pets.length > 0) {
+        this.globalData.currentPet = pets[0]
+      }
+    } catch (error) {
+      console.error('加载宠物列表失败', error)
     }
   }
 })
-
