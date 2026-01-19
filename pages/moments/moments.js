@@ -24,9 +24,11 @@ Page({
       const formattedMoments = moments.map(m => ({
         id: m.id,
         nickname: m.user.nickname,
+        avatar: m.user.avatar || '/images/pet.png',
         time: this.formatTime(m.created_at),
         location: '',
         content: m.content,
+        images: m.images || [],
         likes: m.like_count,
         liked: m.is_liked || false,
         comments: [],
@@ -100,5 +102,14 @@ Page({
 
   onReachBottom() {
     this.loadMoments()
+  },
+
+  goToPublish() {
+    wx.navigateTo({ url: '/pages/moments/publish/publish' })
+  },
+
+  previewImage(e) {
+    const { url, urls } = e.currentTarget.dataset
+    wx.previewImage({ current: url, urls })
   }
 })

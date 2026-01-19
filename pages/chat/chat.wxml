@@ -1,32 +1,71 @@
 <!--chat.wxml-->
-<navigation-bar title="AI聊天" back="{{false}}" color="black" background="#FFF"></navigation-bar>
-<view class="page-content">
-  <view class="header">
-    <image class="avatar" src="{{petAvatar}}" mode="aspectFill"></image>
-    <view class="info">
-      <text class="name">{{petName}}（AI 宠物）</text>
-      <text class="status">在线中·在家开心</text>
+<navigation-bar title="AI聊天" back="{{false}}" color="black" background="#FFF9F5"></navigation-bar>
+<view class="chat-container">
+  <!-- 宠物信息卡片 -->
+  <view class="pet-card">
+    <view class="pet-avatar-wrapper">
+      <view class="avatar-glow"></view>
+      <image class="pet-avatar" src="{{petAvatar}}" mode="aspectFill"></image>
+      <view class="online-indicator"></view>
     </view>
-  </view>
-
-  <view class="chat-area">
-    <view class="chat-list">
-      <view wx:for="{{messages}}" wx:key="index" class="message-item {{item.type}}">
-        <image wx:if="{{item.avatar}}" class="message-avatar" src="{{item.avatar}}" mode="aspectFill"></image>
-        <view wx:else class="message-avatar">{{item.type === 'pet' ? '🐕' : '👤'}}</view>
-        <view class="message-content">
-          <text class="message-sender">{{item.sender}}</text>
-          <view class="message-bubble {{item.type}}">
-            <view class="message-text">{{item.content}}</view>
-          </view>
-          <text class="message-time">{{item.time}}</text>
-        </view>
+    <view class="pet-info">
+      <view class="pet-name">{{petName}}</view>
+      <view class="pet-status">
+        <view class="status-dot"></view>
+        <text>在线中·随时陪伴</text>
       </view>
     </view>
   </view>
 
-  <view class="input-bar">
-    <input class="input" placeholder="给{{petName}}留言..." value="{{inputText}}" bindinput="onInput" />
-    <view class="send-btn" bindtap="sendMessage">➤</view>
+  <!-- 聊天消息区域 -->
+  <scroll-view class="messages-area" scroll-y scroll-into-view="{{scrollId}}" scroll-with-animation>
+    <view class="messages-list">
+      <view wx:for="{{messages}}" wx:key="index" class="message-wrapper {{item.type}}">
+        <!-- 宠物消息 -->
+        <view wx:if="{{item.type === 'pet'}}" class="message-group pet-message">
+          <image class="message-avatar" src="{{item.avatar}}" mode="aspectFill"></image>
+          <view class="message-content">
+            <view class="message-bubble pet-bubble">
+              <view class="bubble-tail pet-tail"></view>
+              <text class="message-text">{{item.content}}</text>
+            </view>
+            <text class="message-time">{{item.time}}</text>
+          </view>
+        </view>
+
+        <!-- 用户消息 -->
+        <view wx:else class="message-group user-message">
+          <view class="message-content">
+            <view class="message-bubble user-bubble">
+              <view class="bubble-tail user-tail"></view>
+              <text class="message-text">{{item.content}}</text>
+            </view>
+            <text class="message-time">{{item.time}}</text>
+          </view>
+        </view>
+      </view>
+      <view id="bottom"></view>
+    </view>
+  </scroll-view>
+
+  <!-- 输入区域 -->
+  <view class="input-container">
+    <view class="input-card">
+      <view class="input-wrapper">
+        <input
+          class="message-input"
+          placeholder="和{{petName}}说点什么..."
+          placeholder-class="input-placeholder"
+          value="{{inputText}}"
+          bindinput="onInput"
+          confirm-type="send"
+        />
+      </view>
+      <view class="send-button {{inputText ? 'active' : ''}}" bindtap="sendMessage">
+        <view class="send-icon">
+          <text>→</text>
+        </view>
+      </view>
+    </view>
   </view>
 </view>

@@ -5,6 +5,7 @@ const tokenManager = require('../../utils/token')
 Page({
   data: {
     userInfo: {
+      avatar: '/images/pet.png',
       name: '加载中...',
       id: ''
     },
@@ -29,6 +30,7 @@ Page({
       if (app.globalData.userInfo) {
         this.setData({
           userInfo: {
+            avatar: app.globalData.userInfo.avatar_url || app.globalData.userInfo.avatar || '/images/pet.png',
             name: app.globalData.userInfo.nickname,
             id: app.globalData.userInfo.id.toString()
           }
@@ -38,6 +40,7 @@ Page({
         app.globalData.userInfo = user
         this.setData({
           userInfo: {
+            avatar: user.avatar_url || '/images/pet.png',
             name: user.nickname,
             id: user.id.toString()
           }

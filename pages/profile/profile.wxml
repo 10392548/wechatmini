@@ -22,10 +22,6 @@
         <text class="form-label">ID</text>
         <text class="form-value">{{userInfo.id}}</text>
       </view>
-      <view class="form-item">
-        <text class="form-label">手机号</text>
-        <input class="form-input" value="{{userInfo.phone}}" placeholder="请输入手机号" bindinput="onPhoneInput"/>
-      </view>
     </view>
   </view>
 
@@ -40,10 +36,6 @@
       <view class="form-item">
         <text class="form-label">品种</text>
         <input class="form-input" value="{{petInfo.breed}}" placeholder="请输入品种" bindinput="onBreedInput"/>
-      </view>
-      <view class="form-item">
-        <text class="form-label">年龄</text>
-        <input class="form-input" value="{{petInfo.age}}" placeholder="请输入年龄" bindinput="onAgeInput"/>
       </view>
     </view>
   </view>

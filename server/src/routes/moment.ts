@@ -15,7 +15,6 @@ router.get('/', authMiddleware, async (req: AuthRequest, res) => {
 
     const momentRepo = AppDataSource.getRepository(Moment);
     const [moments, total] = await momentRepo.findAndCount({
-      where: { is_public: true },
       relations: ['user', 'pet'],
       order: { created_at: 'DESC' },
       skip: (Number(page) - 1) * Number(limit),
@@ -29,12 +28,9 @@ router.get('/', authMiddleware, async (req: AuthRequest, res) => {
 });
 
 // 创建朋友圈
-router.post('/', authMiddleware, upload.array('images', 9), async (req: AuthRequest, res) => {
+router.post('/', authMiddleware, async (req: AuthRequest, res) => {
   try {
-    const { content, pet_id, is_public = 'true' } = req.body;
-    const files = req.files as Express.Multer.File[];
-
-    const images = files ? files.map(file => `/uploads/${file.filename}`) : [];
+    const { content, pet_id, is_public = true, images = [] } = req.body;
 
     const momentRepo = AppDataSource.getRepository(Moment);
     const moment = momentRepo.create({
@@ -42,7 +38,7 @@ router.post('/', authMiddleware, upload.array('images', 9), async (req: AuthRequ
       pet_id: pet_id ? parseInt(pet_id) : undefined,
       content,
       images,
-      is_public: is_public === 'true'
+      is_public: typeof is_public === 'boolean' ? is_public : is_public === 'true'
     });
 
     await momentRepo.save(moment);

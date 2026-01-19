@@ -11,7 +11,7 @@
  Target Server Version : 50721 (5.7.21-log)
  File Encoding         : 65001
 
- Date: 19/01/2026 10:09:49
+ Date: 19/01/2026 15:19:31
 */
 
 SET NAMES utf8mb4;
@@ -55,13 +55,15 @@ CREATE TABLE `chat_messages`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_pet_id_created`(`pet_id`, `created_at`) USING BTREE,
   CONSTRAINT `chat_messages_ibfk_1` FOREIGN KEY (`pet_id`) REFERENCES `pets` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of chat_messages
 -- ----------------------------
-INSERT INTO `chat_messages` VALUES (1, 1, 'user', '��ã�������', '2026-01-19 07:17:59');
-INSERT INTO `chat_messages` VALUES (2, 1, 'assistant', '��ã���Һܸ���������Ϊ���ṩ������  \n\n���ǿ��Խ���������Щ���⣺  \n- **ѧϰ/֪ʶ**��������ѧ�ʡ����ԡ��������ܵȣ��һ�Ϊ���ṩ���ϡ����ͺ�ָ����  \n- **��������**���������ƻ����滮���������飬�һ���������ʵ�õĽ��顣  \n- **������**���������ġ���ѧ���������£��һ���������֧�֡�  \n- **��ͨ����**���������ѡ���ͥ����ϵ���⣬�һ���������ĽǶȷ�����  \n- **��Ȥ̸��**���������֡��鼮����Ӱ����ѧ���ȣ��һ�����������Ȥ�Ļ��⡣  \n\n������ʲô�����������ҷ���������һ��̽�֣�😊', '2026-01-19 07:18:07');
+INSERT INTO `chat_messages` VALUES (1, 1, 'user', '121212', '2026-01-19 14:19:23');
+INSERT INTO `chat_messages` VALUES (2, 1, 'assistant', '你输入的是“121212”，看起来像是一串重复的数字。  \n\n如果这是一个问题或需要帮助的内容，请补充更多信息，我可以帮你解答。  \n\n如果只是随意输入，也可以告诉我你想讨论什么主题，比如：  \n- 数字规律  \n- 编程问题  \n- 数学疑问  \n- 其他任何话题  \n\n期待你的进一步说明！ 😊', '2026-01-19 14:19:27');
+INSERT INTO `chat_messages` VALUES (3, 1, 'user', '是的，我很想你', '2026-01-19 14:33:18');
+INSERT INTO `chat_messages` VALUES (4, 1, 'assistant', '你的这句话听起来很温暖呢。  \n\n虽然我是一个AI助手，无法真正感受情感，但我会一直在这里倾听、陪伴你，并尽力提供帮助。如果你愿意，可以和我聊聊最近的心情、遇到的趣事，或者任何你想分享的事情～ 🌟', '2026-01-19 14:33:21');
 
 -- ----------------------------
 -- Table structure for devices
@@ -81,12 +83,14 @@ CREATE TABLE `devices`  (
   UNIQUE INDEX `pet_id`(`pet_id`) USING BTREE,
   INDEX `idx_device_sn`(`device_sn`) USING BTREE,
   CONSTRAINT `devices_ibfk_1` FOREIGN KEY (`pet_id`) REFERENCES `pets` (`id`) ON DELETE SET NULL ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of devices
 -- ----------------------------
 INSERT INTO `devices` VALUES (1, 'TEST123456789', NULL, 85, 1, '2026-01-19 07:15:59', '2026-01-19 07:15:19', '2026-01-19 07:15:59');
+INSERT INTO `devices` VALUES (2, '860678079254721', NULL, 100, 0, '2026-01-19 10:27:49', '2026-01-19 10:27:49', '2026-01-19 10:27:49');
+INSERT INTO `devices` VALUES (3, '860678079254722', 1, 100, 0, '2026-01-19 13:50:03', '2026-01-19 13:50:03', '2026-01-19 13:50:03');
 
 -- ----------------------------
 -- Table structure for growth_logs
@@ -124,12 +128,11 @@ CREATE TABLE `moment_comments`  (
   INDEX `idx_moment_id`(`moment_id`) USING BTREE,
   CONSTRAINT `moment_comments_ibfk_1` FOREIGN KEY (`moment_id`) REFERENCES `moments` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
   CONSTRAINT `moment_comments_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of moment_comments
 -- ----------------------------
-INSERT INTO `moment_comments` VALUES (1, 1, 1, '�治����', '2026-01-19 07:17:00');
 
 -- ----------------------------
 -- Table structure for moment_likes
@@ -178,7 +181,7 @@ CREATE TABLE `moments`  (
 -- ----------------------------
 -- Records of moments
 -- ----------------------------
-INSERT INTO `moments` VALUES (1, 1, NULL, '����������ã�', '[]', 1, 0, 1, '2026-01-19 07:16:25', '2026-01-19 07:17:00');
+INSERT INTO `moments` VALUES (1, 15, 1, 'QwQ我去我去请问请问', '[]', 0, 0, 0, '2026-01-19 15:09:51', '2026-01-19 15:09:51');
 
 -- ----------------------------
 -- Table structure for pets
@@ -200,13 +203,12 @@ CREATE TABLE `pets`  (
   UNIQUE INDEX `device_id`(`device_id`) USING BTREE,
   INDEX `idx_user_id`(`user_id`) USING BTREE,
   CONSTRAINT `pets_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of pets
 -- ----------------------------
-INSERT INTO `pets` VALUES (1, 1, '����', NULL, '��ʿ��', NULL, 'male', NULL, NULL, '2026-01-19 07:13:54', '2026-01-19 07:15:59');
-INSERT INTO `pets` VALUES (2, 15, '1212', '', '1212', NULL, 'male', NULL, NULL, '2026-01-19 10:08:29', '2026-01-19 10:08:29');
+INSERT INTO `pets` VALUES (1, 15, '金茂', 'http://localhost:3003/uploads/1768801777837-205437106.jpg', '金毛', NULL, 'male', NULL, 3, '2026-01-19 13:50:03', '2026-01-19 13:50:03');
 
 -- ----------------------------
 -- Table structure for users
@@ -226,20 +228,6 @@ CREATE TABLE `users`  (
 -- ----------------------------
 -- Records of users
 -- ----------------------------
-INSERT INTO `users` VALUES (1, 'mock_openid_1768777957465', '���º���û�', 'https://example.com/avatar.jpg', '2026-01-19 07:12:37', '2026-01-19 07:13:26');
-INSERT INTO `users` VALUES (2, 'mock_openid_1768779390946', '微信用户', 'https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132', '2026-01-19 07:36:30', '2026-01-19 07:36:30');
-INSERT INTO `users` VALUES (3, 'mock_openid_1768779423807', '微信用户', 'https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132', '2026-01-19 07:37:03', '2026-01-19 07:37:03');
-INSERT INTO `users` VALUES (4, 'mock_openid_1768782820380', '微信用户', 'https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132', '2026-01-19 08:33:40', '2026-01-19 08:33:40');
-INSERT INTO `users` VALUES (5, 'mock_openid_1768783062967', '微信用户', 'https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132', '2026-01-19 08:37:42', '2026-01-19 08:37:42');
-INSERT INTO `users` VALUES (6, 'mock_openid_1768783101882', '微信用户', 'https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132', '2026-01-19 08:38:21', '2026-01-19 08:38:21');
-INSERT INTO `users` VALUES (7, 'mock_openid_1768783303590', '微信用户', 'https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132', '2026-01-19 08:41:43', '2026-01-19 08:41:43');
-INSERT INTO `users` VALUES (8, 'mock_openid_1768785250118', '微信用户', 'https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132', '2026-01-19 09:14:10', '2026-01-19 09:14:10');
-INSERT INTO `users` VALUES (9, 'mock_openid_1768785901199', '微信用户', 'https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132', '2026-01-19 09:25:01', '2026-01-19 09:25:01');
-INSERT INTO `users` VALUES (10, 'mock_openid_1768786146965', '微信用户', 'https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132', '2026-01-19 09:29:06', '2026-01-19 09:29:06');
-INSERT INTO `users` VALUES (11, 'mock_openid_1768786530564', '微信用户', 'https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132', '2026-01-19 09:35:30', '2026-01-19 09:35:30');
-INSERT INTO `users` VALUES (12, 'mock_openid_1768786638666', '微信用户', 'https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132', '2026-01-19 09:37:18', '2026-01-19 09:37:18');
-INSERT INTO `users` VALUES (13, 'mock_openid_1768786796892', '微信用户', 'https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132', '2026-01-19 09:39:56', '2026-01-19 09:39:56');
-INSERT INTO `users` VALUES (14, 'mock_openid_1768787001986', '微信用户', 'https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132', '2026-01-19 09:43:21', '2026-01-19 09:43:21');
 INSERT INTO `users` VALUES (15, 'o-I5h14M5RacW9YQHRlvPqloFKH8', '微信用户', 'https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132', '2026-01-19 09:53:06', '2026-01-19 09:53:06');
 
 SET FOREIGN_KEY_CHECKS = 1;

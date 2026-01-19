@@ -4,7 +4,7 @@
   <!-- 个人信息卡片 -->
   <view class="profile-card">
     <view class="profile-header">
-      <image class="profile-avatar" src="/images/pet.png" mode="aspectFill"></image>
+      <image class="profile-avatar" src="{{userInfo.avatar}}" mode="aspectFill"></image>
       <view class="profile-info">
         <view class="profile-name">{{userInfo.name}}</view>
         <view class="profile-id">ID: {{userInfo.id}}</view>

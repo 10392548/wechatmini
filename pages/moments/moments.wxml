@@ -1,17 +1,31 @@
 <!--moments.wxml-->
-<navigation-bar title="朋友圈" back="{{false}}" color="black" background="#FFF"></navigation-bar>
+<navigation-bar title="朋友圈" back="{{false}}" color="black" background="#FFF9F5"></navigation-bar>
 <view class="page-content">
   <view class="content">
     <view class="moment-item" wx:for="{{moments}}" wx:key="id">
       <view class="moment-header">
-        <image class="avatar" src="/images/pet.png" mode="aspectFill"></image>
+        <image class="avatar" src="{{item.avatar}}" mode="aspectFill"></image>
         <view class="user-info">
           <view class="nickname">{{item.nickname}}</view>
-          <view class="time-location">{{item.time}} · {{item.location}}</view>
+          <view class="time-location">{{item.time}}<text wx:if="{{item.location}}"> · {{item.location}}</text></view>
         </view>
       </view>
-      <view class="moment-image-placeholder"></view>
-      <view class="moment-content">{{item.content}}</view>
+
+      <view class="moment-content" wx:if="{{item.content}}">{{item.content}}</view>
+
+      <view class="images-grid images-{{item.images.length}}" wx:if="{{item.images.length > 0}}">
+        <image
+          wx:for="{{item.images}}"
+          wx:for-item="img"
+          wx:key="*this"
+          class="moment-image"
+          src="{{img}}"
+          mode="aspectFill"
+          bindtap="previewImage"
+          data-url="{{img}}"
+          data-urls="{{item.images}}"
+        ></image>
+      </view>
       <view class="moment-footer">
         <view class="action-item {{item.liked ? 'liked' : ''}}" bindtap="onLike" data-id="{{item.id}}">
           <image class="action-icon" src="/images/Like.png" mode="aspectFit"></image>
@@ -41,4 +55,9 @@
       </view>
     </view>
   </view>
+</view>
+
+<!-- 悬浮发布按钮 -->
+<view class="fab" bindtap="goToPublish">
+  <text class="fab-icon">+</text>
 </view>

@@ -4,6 +4,7 @@
     "pages/index/index",
     "pages/bind/bind",
     "pages/moments/moments",
+    "pages/moments/publish/publish",
     "pages/my/my",
     "pages/profile/profile",
     "pages/about/about",

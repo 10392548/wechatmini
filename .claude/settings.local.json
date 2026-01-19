@@ -16,7 +16,8 @@
       "Bash(git commit:*)",
       "Bash(gh repo create:*)",
       "Bash(git remote add origin https://github.com/10392548/wechatmini.git)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Skill(feature-dev:feature-dev)"
     ]
   }
 }

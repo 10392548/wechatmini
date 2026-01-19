@@ -27,9 +27,12 @@ Page({
       const user = await api.user.getProfile()
       const currentPet = app.globalData.currentPet
 
+      console.log('用户数据:', user)
+      console.log('头像URL:', user.avatar_url || user.avatar)
+
       this.setData({
         userInfo: {
-          avatar: user.avatar_url || '/images/pet.png',
+          avatar: user.avatar_url || user.avatar || '/images/pet.png',
           name: user.nickname,
           id: user.id.toString(),
           phone: user.phone || ''
@@ -76,12 +79,6 @@ Page({
     })
   },
 
-  onPhoneInput(e) {
-    this.setData({
-      'userInfo.phone': e.detail.value
-    })
-  },
-
   onPetNameInput(e) {
     this.setData({
       'petInfo.name': e.detail.value
@@ -94,15 +91,12 @@ Page({
     })
   },
 
-  onAgeInput(e) {
-    this.setData({
-      'petInfo.age': e.detail.value
-    })
-  },
-
   async saveProfile() {
     try {
       const { userInfo, petInfo } = this.data
+      const app = getApp()
+
+      console.log('保存的头像URL:', userInfo.avatar)
 
       // 更新用户信息
       await api.user.updateProfile({
@@ -121,7 +115,6 @@ Page({
         })
 
         // 更新全局宠物信息
-        const app = getApp()
         if (app.globalData.currentPet && app.globalData.currentPet.id === petInfo.id) {
           app.globalData.currentPet = {
             ...app.globalData.currentPet,
@@ -129,6 +122,16 @@ Page({
             breed: petInfo.breed,
             age: isNaN(age) ? null : age
           }
+        }
+      }
+
+      // 更新全局用户信息
+      if (app.globalData.userInfo) {
+        app.globalData.userInfo = {
+          ...app.globalData.userInfo,
+          nickname: userInfo.name,
+          avatar_url: userInfo.avatar,
+          phone: userInfo.phone
         }
       }
 
