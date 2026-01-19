@@ -32,7 +32,9 @@ Page({
         likes: m.like_count,
         liked: m.is_liked || false,
         comments: [],
-        showComments: false
+        showComments: false,
+        commentInput: '',
+        commentsLoaded: false
       }))
 
       this.setData({
@@ -89,15 +91,102 @@ Page({
     }
   },
 
-  toggleComments(e) {
+  async toggleComments(e) {
     const id = e.currentTarget.dataset.id
+    const moment = this.data.moments.find(m => m.id === id)
+
+    if (!moment) return
+
+    const newShowComments = !moment.showComments
+
     const moments = this.data.moments.map(item => {
       if (item.id === id) {
-        return { ...item, showComments: !item.showComments }
+        return { ...item, showComments: newShowComments }
       }
       return item
     })
     this.setData({ moments })
+
+    if (newShowComments && !moment.commentsLoaded) {
+      await this.loadComments(id)
+    }
+  },
+
+  async loadComments(momentId) {
+    try {
+      const comments = await api.moment.getComments(momentId)
+
+      const formattedComments = comments.map(c => ({
+        id: c.id,
+        nickname: c.user.nickname,
+        content: c.content,
+        time: this.formatTime(c.created_at),
+        replies: []
+      }))
+
+      const moments = this.data.moments.map(item => {
+        if (item.id === momentId) {
+          return { ...item, comments: formattedComments, commentsLoaded: true }
+        }
+        return item
+      })
+
+      this.setData({ moments })
+    } catch (error) {
+      wx.showToast({ title: '加载评论失败', icon: 'none' })
+    }
+  },
+
+  onCommentInput(e) {
+    const id = e.currentTarget.dataset.id
+    const value = e.detail.value
+
+    const moments = this.data.moments.map(item => {
+      if (item.id === id) {
+        return { ...item, commentInput: value }
+      }
+      return item
+    })
+
+    this.setData({ moments })
+  },
+
+  async submitComment(e) {
+    const id = e.currentTarget.dataset.id
+    const moment = this.data.moments.find(m => m.id === id)
+
+    if (!moment || !moment.commentInput.trim()) {
+      wx.showToast({ title: '请输入评论内容', icon: 'none' })
+      return
+    }
+
+    try {
+      const comment = await api.moment.commentMoment(id, moment.commentInput.trim())
+
+      const newComment = {
+        id: comment.id,
+        nickname: comment.user?.nickname || '我',
+        content: comment.content,
+        time: '刚刚',
+        replies: []
+      }
+
+      const moments = this.data.moments.map(item => {
+        if (item.id === id) {
+          return {
+            ...item,
+            comments: [...item.comments, newComment],
+            commentInput: ''
+          }
+        }
+        return item
+      })
+
+      this.setData({ moments })
+      wx.showToast({ title: '评论成功', icon: 'success' })
+    } catch (error) {
+      wx.showToast({ title: '评论失败', icon: 'none' })
+    }
   },
 
   onReachBottom() {

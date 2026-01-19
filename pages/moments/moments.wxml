@@ -43,13 +43,23 @@
           <view class="comment-main">
             <text class="comment-nickname">{{comment.nickname}}</text>
             <text class="comment-content">{{comment.content}}</text>
-            <text class="comment-time">{{comment.time}}</text>
           </view>
-          <!-- 回复列表 -->
-          <view class="reply-item" wx:for="{{comment.replies}}" wx:for-item="reply" wx:key="id">
-            <text class="reply-nickname">{{reply.nickname}}</text>
-            <text class="reply-content">{{reply.content}}</text>
-            <text class="reply-time">{{reply.time}}</text>
+          <text class="comment-time">{{comment.time}}</text>
+        </view>
+
+        <!-- 评论输入框 -->
+        <view class="comment-input-wrapper">
+          <input
+            class="comment-input"
+            placeholder="写评论..."
+            value="{{item.commentInput}}"
+            bindinput="onCommentInput"
+            data-id="{{item.id}}"
+            confirm-type="send"
+            bindconfirm="submitComment"
+          />
+          <view class="comment-send-btn" bindtap="submitComment" data-id="{{item.id}}">
+            <text class="send-text">发送</text>
           </view>
         </view>
       </view>

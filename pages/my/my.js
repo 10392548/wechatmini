@@ -40,7 +40,7 @@ Page({
         app.globalData.userInfo = user
         this.setData({
           userInfo: {
-            avatar: user.avatar_url || '/images/pet.png',
+            avatar: user.avatar_url || user.avatar || '/images/pet.png',
             name: user.nickname,
             id: user.id.toString()
           }
@@ -54,14 +54,22 @@ Page({
   async loadDevices() {
     try {
       const pets = await api.pet.getPetList()
+      console.log('宠物列表数据:', pets)
+
       const devices = pets
         .filter(pet => pet.device)
-        .map(pet => ({
-          id: pet.device.id,
-          imei: pet.device.imei,
-          petName: pet.name,
-          battery: pet.device.battery_level || 0
-        }))
+        .map(pet => {
+          console.log('设备数据:', pet.device)
+          return {
+            id: pet.device.id,
+            imei: pet.device.imei,
+            petName: pet.name,
+            battery: pet.device.battery_level || 0,
+            bindTime: pet.device.created_at || new Date().toLocaleDateString()
+          }
+        })
+
+      console.log('处理后的设备列表:', devices)
       this.setData({ devices })
     } catch (error) {
       console.error('加载设备列表失败', error)

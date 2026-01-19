@@ -99,11 +99,16 @@ Page({
       console.log('保存的头像URL:', userInfo.avatar)
 
       // 更新用户信息
-      await api.user.updateProfile({
+      const updateData = {
         nickname: userInfo.name,
         avatar_url: userInfo.avatar,
+        avatar: userInfo.avatar,
         phone: userInfo.phone
-      })
+      }
+      console.log('发送到后端的数据:', updateData)
+
+      const result = await api.user.updateProfile(updateData)
+      console.log('保存结果:', result)
 
       // 更新宠物信息
       if (petInfo.id) {
@@ -131,6 +136,7 @@ Page({
           ...app.globalData.userInfo,
           nickname: userInfo.name,
           avatar_url: userInfo.avatar,
+          avatar: userInfo.avatar,
           phone: userInfo.phone
         }
       }
