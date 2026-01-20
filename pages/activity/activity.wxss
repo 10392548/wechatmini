@@ -7,41 +7,7 @@ page {
   min-height: 100vh;
 }
 
-.calorie-card {
-  background: #fff;
-  margin-bottom: 24rpx;
-  padding: 32rpx 28rpx;
-  border-radius: 20rpx;
-}
-
-.label {
-  font-size: 28rpx;
-  color: #999;
-}
-
-.value-row {
-  display: flex;
-  align-items: baseline;
-  margin: 10rpx 0;
-}
-
-.value {
-  font-size: 80rpx;
-  font-weight: 700;
-  color: #333;
-}
-
-.unit {
-  font-size: 28rpx;
-  color: #999;
-  margin-left: 10rpx;
-}
-
-.compare {
-  font-size: 26rpx;
-  color: #FF8C42;
-}
-
+/* 地图容器 */
 .map-container {
   background: #fff;
   margin-bottom: 24rpx;
@@ -86,6 +52,7 @@ page {
   justify-content: space-around;
   padding: 24rpx;
   background: #fff;
+  border-top: 1rpx solid #f0f0f0;
 }
 
 .map-label {
@@ -93,48 +60,128 @@ page {
   color: #666;
 }
 
+/* 当前状态卡片 */
+.status-card {
+  background: #fff;
+  margin-bottom: 24rpx;
+  padding: 28rpx;
+  border-radius: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.status-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.status-label {
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 12rpx;
+}
+
+.status-value {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.status-icon-img {
+  width: 48rpx;
+  height: 48rpx;
+  margin-right: 8rpx;
+}
+
+.status-text {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.temp-value {
+  font-size: 48rpx;
+  font-weight: 700;
+  color: #FF8C42;
+}
+
+.temp-unit {
+  font-size: 24rpx;
+  color: #999;
+  margin-left: 4rpx;
+}
+
+.status-divider {
+  width: 1rpx;
+  height: 60rpx;
+  background: #f0f0f0;
+}
+
+/* 统计卡片行 */
 .stats-row {
   display: flex;
   margin-bottom: 24rpx;
-}
-.stats-row .stat-card:first-child {
-  margin-right: 16rpx;
+  justify-content: space-between;
 }
 
 .stat-card {
   flex: 1;
-  padding: 32rpx 24rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28rpx 16rpx;
   border-radius: 20rpx;
-  color: #fff;
+  margin: 0 6rpx;
+}
+
+.stat-card:first-child {
+  margin-left: 0;
+}
+
+.stat-card:last-child {
+  margin-right: 0;
+}
+
+.stat-card.orange {
+  background: #FFF3E0;
 }
 
 .stat-card.blue {
-  background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+  background: #E3F2FD;
 }
 
-.stat-card.purple {
-  background: linear-gradient(135deg, #7B68EE 0%, #6A5ACD 100%);
+.stat-card.green {
+  background: #E8F5E9;
 }
 
-.stat-icon {
-  font-size: 48rpx;
-  display: block;
-  margin-bottom: 20rpx;
+.stat-icon-img {
+  width: 48rpx;
+  height: 48rpx;
+  margin-bottom: 12rpx;
 }
 
 .stat-label {
-  font-size: 26rpx;
-  opacity: 0.9;
-  display: block;
-  margin-bottom: 10rpx;
+  font-size: 24rpx;
+  color: #666;
+  margin-bottom: 8rpx;
 }
 
 .stat-value {
   font-size: 40rpx;
   font-weight: 700;
-  display: block;
+  color: #333;
+  margin-bottom: 4rpx;
 }
 
+.stat-unit {
+  font-size: 22rpx;
+  color: #999;
+}
+
+/* 详情区域 */
 .detail-section {
   background: #fff;
   padding: 28rpx;
@@ -153,12 +200,6 @@ page {
   display: flex;
   flex-direction: column;
 }
-.detail-list .detail-item {
-  margin-bottom: 16rpx;
-}
-.detail-list .detail-item:last-child {
-  margin-bottom: 0;
-}
 
 .detail-item {
   display: flex;
@@ -166,25 +207,26 @@ page {
   padding: 20rpx;
   background: #f8f8f8;
   border-radius: 12rpx;
+  margin-bottom: 12rpx;
+}
+
+.detail-item:last-child {
+  margin-bottom: 0;
 }
 
 .detail-icon {
-  width: 80rpx;
-  height: 80rpx;
-  border-radius: 50%;
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 16rpx;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 40rpx;
   margin-right: 20rpx;
 }
 
-.detail-icon.green {
-  background: #E8F5E9;
-}
-
-.detail-icon.yellow {
-  background: #FFF9E6;
+.detail-icon-img {
+  width: 40rpx;
+  height: 40rpx;
 }
 
 .detail-info {
@@ -194,10 +236,10 @@ page {
 }
 
 .detail-name {
-  font-size: 30rpx;
+  font-size: 28rpx;
   font-weight: 600;
   color: #333;
-  margin-bottom: 6rpx;
+  margin-bottom: 4rpx;
 }
 
 .detail-time {
@@ -208,5 +250,5 @@ page {
 .detail-value {
   font-size: 28rpx;
   font-weight: 600;
-  color: #333;
+  color: #666;
 }

@@ -465,3 +465,66 @@ page {
   border-radius: 4rpx;
   transition: width 0.5s ease;
 }
+
+.health-tip {
+  display: block;
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 12rpx;
+  text-align: center;
+}
+
+/* ========== 离线提示 ========== */
+.offline-tip {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 48rpx 32rpx;
+  text-align: center;
+  margin-top: 20rpx;
+}
+
+.tip-icon {
+  font-size: 64rpx;
+  margin-bottom: 16rpx;
+}
+
+.tip-icon-img {
+  width: 80rpx;
+  height: 80rpx;
+  margin-bottom: 16rpx;
+}
+
+.tip-text {
+  display: block;
+  font-size: 28rpx;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.tip-sub {
+  display: block;
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* ========== 调试开关 ========== */
+.debug-switch {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 24rpx 28rpx;
+  margin-bottom: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.debug-label {
+  font-size: 28rpx;
+  color: #666;
+}
+
+.debug-status {
+  font-size: 24rpx;
+  color: #999;
+  margin-left: 16rpx;
+}
