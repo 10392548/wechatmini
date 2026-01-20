@@ -6,26 +6,39 @@ export class Device {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true })
-  device_sn: string;
+  @Column({ name: 'device_sn', unique: true })
+  deviceSn: string;
 
-  @Column({ type: 'int', nullable: true })
-  pet_id: number | null;
+  @Column({ name: 'pet_id', type: 'int', nullable: true })
+  petId: number | null;
 
-  @Column({ default: 100 })
-  battery_level: number;
+  @Column({ name: 'battery_level', default: 100 })
+  batteryLevel: number;
 
-  @Column({ default: false })
-  is_online: boolean;
+  @Column({ name: 'is_online', default: false })
+  isOnline: boolean;
 
-  @Column({ type: 'timestamp', nullable: true })
-  last_online_at: Date;
+  @Column({ name: 'last_online_at', type: 'timestamp', nullable: true })
+  lastOnlineAt: Date;
 
-  @CreateDateColumn()
-  created_at: Date;
+  // IoT控制字段
+  @Column({ name: 'buzzer_enabled', type: 'tinyint', default: 0 })
+  buzzerEnabled: boolean;
 
-  @UpdateDateColumn()
-  updated_at: Date;
+  @Column({ name: 'sleep_mode_enabled', type: 'tinyint', default: 0 })
+  sleepModeEnabled: boolean;
+
+  @Column({ name: 'led_enabled', type: 'tinyint', default: 0 })
+  ledEnabled: boolean;
+
+  @Column({ name: 'firmware_version', length: 20, nullable: true })
+  firmwareVersion: string;
+
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
 
   @OneToOne(() => Pet, pet => pet.device)
   pet: Pet;

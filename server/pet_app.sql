@@ -11,7 +11,7 @@
  Target Server Version : 50721 (5.7.21-log)
  File Encoding         : 65001
 
- Date: 19/01/2026 15:19:31
+ Date: 20/01/2026 11:36:36
 */
 
 SET NAMES utf8mb4;
@@ -55,15 +55,93 @@ CREATE TABLE `chat_messages`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_pet_id_created`(`pet_id`, `created_at`) USING BTREE,
   CONSTRAINT `chat_messages_ibfk_1` FOREIGN KEY (`pet_id`) REFERENCES `pets` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of chat_messages
 -- ----------------------------
-INSERT INTO `chat_messages` VALUES (1, 1, 'user', '121212', '2026-01-19 14:19:23');
-INSERT INTO `chat_messages` VALUES (2, 1, 'assistant', '你输入的是“121212”，看起来像是一串重复的数字。  \n\n如果这是一个问题或需要帮助的内容，请补充更多信息，我可以帮你解答。  \n\n如果只是随意输入，也可以告诉我你想讨论什么主题，比如：  \n- 数字规律  \n- 编程问题  \n- 数学疑问  \n- 其他任何话题  \n\n期待你的进一步说明！ 😊', '2026-01-19 14:19:27');
-INSERT INTO `chat_messages` VALUES (3, 1, 'user', '是的，我很想你', '2026-01-19 14:33:18');
-INSERT INTO `chat_messages` VALUES (4, 1, 'assistant', '你的这句话听起来很温暖呢。  \n\n虽然我是一个AI助手，无法真正感受情感，但我会一直在这里倾听、陪伴你，并尽力提供帮助。如果你愿意，可以和我聊聊最近的心情、遇到的趣事，或者任何你想分享的事情～ 🌟', '2026-01-19 14:33:21');
+
+-- ----------------------------
+-- Table structure for device_commands
+-- ----------------------------
+DROP TABLE IF EXISTS `device_commands`;
+CREATE TABLE `device_commands`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `device_id` int(11) NOT NULL COMMENT '设备ID',
+  `command_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '命令类型：buzzer/sleep/led',
+  `payload` json NULL COMMENT '命令载荷',
+  `status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT 'pending' COMMENT '状态：pending/sent/confirmed/failed',
+  `sent_at` timestamp NULL DEFAULT NULL COMMENT '发送时间',
+  `confirmed_at` timestamp NULL DEFAULT NULL COMMENT '确认时间',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `idx_device_id`(`device_id`) USING BTREE,
+  INDEX `idx_status`(`status`) USING BTREE,
+  INDEX `idx_created_at`(`created_at`) USING BTREE,
+  CONSTRAINT `device_commands_ibfk_1` FOREIGN KEY (`device_id`) REFERENCES `devices` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '设备命令记录表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of device_commands
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for device_data_logs
+-- ----------------------------
+DROP TABLE IF EXISTS `device_data_logs`;
+CREATE TABLE `device_data_logs`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `device_id` int(11) NOT NULL COMMENT '设备ID',
+  `device_sn` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '设备序列号',
+  `raw_data` json NOT NULL COMMENT '原始MQTT数据',
+  `activity` int(11) NULL DEFAULT NULL COMMENT '活动量',
+  `temperature` decimal(4, 1) NULL DEFAULT NULL COMMENT '温度',
+  `battery_level` int(11) NULL DEFAULT NULL COMMENT '电量',
+  `motion_state` int(11) NULL DEFAULT NULL COMMENT '运动状态',
+  `latitude` decimal(10, 7) NULL DEFAULT NULL COMMENT '纬度',
+  `longitude` decimal(11, 7) NULL DEFAULT NULL COMMENT '经度',
+  `received_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '接收时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `idx_device_id`(`device_id`) USING BTREE,
+  INDEX `idx_device_sn`(`device_sn`) USING BTREE,
+  INDEX `idx_received_at`(`received_at`) USING BTREE,
+  CONSTRAINT `device_data_logs_ibfk_1` FOREIGN KEY (`device_id`) REFERENCES `devices` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '设备数据日志表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of device_data_logs
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for device_locations
+-- ----------------------------
+DROP TABLE IF EXISTS `device_locations`;
+CREATE TABLE `device_locations`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `device_id` int(11) NOT NULL COMMENT '设备ID',
+  `device_sn` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '设备序列号',
+  `latitude` decimal(10, 7) NOT NULL COMMENT '纬度（校准后）',
+  `longitude` decimal(11, 7) NOT NULL COMMENT '经度（校准后）',
+  `latitude_original` decimal(10, 7) NULL DEFAULT NULL COMMENT '原始纬度',
+  `longitude_original` decimal(11, 7) NULL DEFAULT NULL COMMENT '原始经度',
+  `altitude` decimal(8, 2) NULL DEFAULT NULL COMMENT '海拔（米）',
+  `accuracy` decimal(8, 2) NULL DEFAULT NULL COMMENT '定位精度（米）',
+  `activity` int(11) NULL DEFAULT 0 COMMENT '活动量',
+  `temperature` decimal(4, 1) NULL DEFAULT NULL COMMENT '温度（℃）',
+  `motion_state` int(11) NULL DEFAULT 0 COMMENT '运动状态：0=静止 1=行走 2=跑步',
+  `recorded_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '设备记录时间',
+  `received_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '服务器接收时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `idx_device_id`(`device_id`) USING BTREE,
+  INDEX `idx_device_sn`(`device_sn`) USING BTREE,
+  INDEX `idx_recorded_at`(`recorded_at`) USING BTREE,
+  INDEX `idx_received_at`(`received_at`) USING BTREE,
+  CONSTRAINT `device_locations_ibfk_1` FOREIGN KEY (`device_id`) REFERENCES `devices` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '设备位置记录表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of device_locations
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for devices
@@ -78,19 +156,21 @@ CREATE TABLE `devices`  (
   `last_online_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `buzzer_enabled` tinyint(1) NULL DEFAULT 0 COMMENT '蜂鸣器开关状态',
+  `sleep_mode_enabled` tinyint(1) NULL DEFAULT 0 COMMENT '休眠模式开关状态',
+  `led_enabled` tinyint(1) NULL DEFAULT 0 COMMENT 'LED灯开关状态',
+  `firmware_version` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '固件版本',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `device_sn`(`device_sn`) USING BTREE,
   UNIQUE INDEX `pet_id`(`pet_id`) USING BTREE,
   INDEX `idx_device_sn`(`device_sn`) USING BTREE,
   CONSTRAINT `devices_ibfk_1` FOREIGN KEY (`pet_id`) REFERENCES `pets` (`id`) ON DELETE SET NULL ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of devices
 -- ----------------------------
-INSERT INTO `devices` VALUES (1, 'TEST123456789', NULL, 85, 1, '2026-01-19 07:15:59', '2026-01-19 07:15:19', '2026-01-19 07:15:59');
-INSERT INTO `devices` VALUES (2, '860678079254721', NULL, 100, 0, '2026-01-19 10:27:49', '2026-01-19 10:27:49', '2026-01-19 10:27:49');
-INSERT INTO `devices` VALUES (3, '860678079254722', 1, 100, 0, '2026-01-19 13:50:03', '2026-01-19 13:50:03', '2026-01-19 13:50:03');
+INSERT INTO `devices` VALUES (8, '860678079254725', 8, 100, 0, '2026-01-19 19:08:35', '2026-01-19 19:08:35', '2026-01-19 19:08:35', 0, 0, 0, NULL);
 
 -- ----------------------------
 -- Table structure for growth_logs
@@ -107,11 +187,55 @@ CREATE TABLE `growth_logs`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_pet_created`(`pet_id`, `created_at`) USING BTREE,
   CONSTRAINT `growth_logs_ibfk_1` FOREIGN KEY (`pet_id`) REFERENCES `pets` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of growth_logs
 -- ----------------------------
+INSERT INTO `growth_logs` VALUES (2, 9, 'milestone', 'API Test Log', 'Created via API test', NULL, '2026-01-20 05:00:11');
+INSERT INTO `growth_logs` VALUES (3, 8, 'milestone', 'QwQ我去我去', '请问请问', NULL, '2026-01-20 05:03:38');
+INSERT INTO `growth_logs` VALUES (4, 8, 'activity', '2121221', '1212121212', NULL, '2026-01-20 05:41:12');
+
+-- ----------------------------
+-- Table structure for health_records
+-- ----------------------------
+DROP TABLE IF EXISTS `health_records`;
+CREATE TABLE `health_records`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `pet_id` int(11) NOT NULL,
+  `record_type` enum('vaccination','illness','medication','checkup') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `title` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
+  `record_date` date NULL DEFAULT NULL,
+  `end_date` date NULL DEFAULT NULL,
+  `vaccine_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `next_vaccination_date` date NULL DEFAULT NULL,
+  `symptoms` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `diagnosis` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `vet_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `hospital` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `medicine_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `dosage` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `frequency` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `duration_days` int(11) NULL DEFAULT NULL,
+  `weight` decimal(5, 2) NULL DEFAULT NULL,
+  `temperature` decimal(5, 2) NULL DEFAULT NULL,
+  `heart_rate` int(11) NULL DEFAULT NULL,
+  `checkup_result` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
+  `cost` decimal(10, 2) NULL DEFAULT NULL,
+  `notes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `idx_pet_id`(`pet_id`) USING BTREE,
+  INDEX `idx_record_type`(`record_type`) USING BTREE,
+  INDEX `idx_record_date`(`record_date`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of health_records
+-- ----------------------------
+INSERT INTO `health_records` VALUES (1, 8, 'medication', '狂犬疫苗', NULL, '2026-01-20', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '屁屁', '1片', '每日2次', 30, NULL, NULL, NULL, NULL, 380.00, '生冷少吃', '2026-01-20 06:15:11', '2026-01-20 06:15:11');
 
 -- ----------------------------
 -- Table structure for moment_comments
@@ -149,11 +273,12 @@ CREATE TABLE `moment_likes`  (
   INDEX `idx_moment_id`(`moment_id`) USING BTREE,
   CONSTRAINT `moment_likes_ibfk_1` FOREIGN KEY (`moment_id`) REFERENCES `moments` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
   CONSTRAINT `moment_likes_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of moment_likes
 -- ----------------------------
+INSERT INTO `moment_likes` VALUES (2, 3, 18, '2026-01-19 19:14:15');
 
 -- ----------------------------
 -- Table structure for moments
@@ -176,12 +301,12 @@ CREATE TABLE `moments`  (
   INDEX `idx_created_at`(`created_at`) USING BTREE,
   CONSTRAINT `moments_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
   CONSTRAINT `moments_ibfk_2` FOREIGN KEY (`pet_id`) REFERENCES `pets` (`id`) ON DELETE SET NULL ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of moments
 -- ----------------------------
-INSERT INTO `moments` VALUES (1, 15, 1, 'QwQ我去我去请问请问', '[]', 0, 0, 0, '2026-01-19 15:09:51', '2026-01-19 15:09:51');
+INSERT INTO `moments` VALUES (3, 18, 8, '11111', '[\"http://localhost:3003/uploads/1768821242646-157863045.png\"]', 1, 1, 0, '2026-01-19 19:14:02', '2026-01-19 19:14:15');
 
 -- ----------------------------
 -- Table structure for pets
@@ -203,12 +328,17 @@ CREATE TABLE `pets`  (
   UNIQUE INDEX `device_id`(`device_id`) USING BTREE,
   INDEX `idx_user_id`(`user_id`) USING BTREE,
   CONSTRAINT `pets_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of pets
 -- ----------------------------
-INSERT INTO `pets` VALUES (1, 15, '金茂', 'http://localhost:3003/uploads/1768801777837-205437106.jpg', '金毛', NULL, 'male', NULL, 3, '2026-01-19 13:50:03', '2026-01-19 13:50:03');
+INSERT INTO `pets` VALUES (4, 18, '金猫', '', '金毛', NULL, 'male', NULL, 5, '2026-01-19 19:02:03', '2026-01-19 19:02:03');
+INSERT INTO `pets` VALUES (5, 18, '金毛1', 'http://localhost:3003/uploads/1768820633043-99487028.jpg', '金毛1', NULL, 'male', NULL, NULL, '2026-01-19 19:04:10', '2026-01-19 19:04:10');
+INSERT INTO `pets` VALUES (6, 18, '金毛1', 'http://localhost:3003/uploads/1768820633043-99487028.jpg', '金毛1', NULL, 'male', NULL, 6, '2026-01-19 19:05:01', '2026-01-19 19:05:01');
+INSERT INTO `pets` VALUES (7, 18, '金毛1', 'http://localhost:3003/uploads/1768820633043-99487028.jpg', '金毛1', NULL, 'male', NULL, 7, '2026-01-19 19:07:40', '2026-01-19 19:07:40');
+INSERT INTO `pets` VALUES (8, 18, '张飞', 'http://localhost:3003/uploads/1768820903276-610879255.jpg', '金毛', NULL, 'male', NULL, 8, '2026-01-19 19:08:35', '2026-01-19 19:08:35');
+INSERT INTO `pets` VALUES (9, 19, 'Test Pet', NULL, 'Golden', NULL, 'male', NULL, NULL, '2026-01-20 04:20:08', '2026-01-20 04:20:08');
 
 -- ----------------------------
 -- Table structure for users
@@ -219,15 +349,18 @@ CREATE TABLE `users`  (
   `openid` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `nickname` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
   `avatar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `phone` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '手机号',
+  `has_custom_profile` tinyint(1) NULL DEFAULT 0 COMMENT '是否自定义过资料（头像或昵称）：0-否，1-是',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `openid`(`openid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 20 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of users
 -- ----------------------------
-INSERT INTO `users` VALUES (15, 'o-I5h14M5RacW9YQHRlvPqloFKH8', '微信用户', 'https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132', '2026-01-19 09:53:06', '2026-01-19 09:53:06');
+INSERT INTO `users` VALUES (18, 'o-I5h14M5RacW9YQHRlvPqloFKH8', '微信用1户', 'http://localhost:3003/uploads/1768820420218-944785976.jpg', '', 1, '2026-01-19 19:00:05', '2026-01-19 19:00:22');
+INSERT INTO `users` VALUES (19, 'mock_openid_1768853966437', '微信用户', '', NULL, 0, '2026-01-20 04:19:26', '2026-01-20 04:19:26');
 
 SET FOREIGN_KEY_CHECKS = 1;

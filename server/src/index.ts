@@ -6,6 +6,7 @@ import { config } from './config';
 import authRoutes from './routes/auth';
 import petRoutes from './routes/pet';
 import deviceRoutes from './routes/device';
+import deviceLocationRoutes from './routes/device-location';
 import momentRoutes from './routes/moment';
 import chatRoutes from './routes/chat';
 import userRoutes from './routes/user';
@@ -23,6 +24,12 @@ import { ChatMessage } from './entities/ChatMessage';
 import { ActivityData } from './entities/ActivityData';
 import { GrowthLog } from './entities/GrowthLog';
 import { HealthRecord } from './entities/HealthRecord';
+import { DeviceLocation } from './entities/DeviceLocation';
+import { DeviceDataLog } from './entities/DeviceDataLog';
+import { DeviceCommand } from './entities/DeviceCommand';
+
+// 服务导入
+import { initMQTTService } from './services/mqtt.service';
 
 // 初始化数据库连接
 export const AppDataSource = new DataSource({
@@ -32,7 +39,13 @@ export const AppDataSource = new DataSource({
   username: config.database.username,
   password: config.database.password,
   database: config.database.database,
-  entities: [User, Pet, Device, Moment, MomentLike, MomentComment, ChatMessage, ActivityData, GrowthLog, HealthRecord],
+  entities: [
+    User, Pet, Device,
+    Moment, MomentLike, MomentComment,
+    ChatMessage, ActivityData,
+    GrowthLog, HealthRecord,
+    DeviceLocation, DeviceDataLog, DeviceCommand
+  ],
   synchronize: false, // 生产环境设为 false
   logging: false
 });
@@ -53,6 +66,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/pet', petRoutes);
 app.use('/api/device', deviceRoutes);
+app.use('/api', deviceLocationRoutes);
 app.use('/api/moment', momentRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/upload', uploadRoutes);
@@ -70,6 +84,13 @@ AppDataSource.initialize()
 
     app.listen(config.port, () => {
       console.log(`Server is running on http://localhost:${config.port}`);
+    });
+
+    // 启动MQTT服务
+    const mqttService = initMQTTService();
+    mqttService.connect().catch((err) => {
+      console.error('MQTT connection failed:', err);
+      // MQTT连接失败不影响主服务运行
     });
   })
   .catch((error) => {
