@@ -55,13 +55,27 @@ Page({
     try {
       const pets = await api.pet.getPetList()
       console.log('宠物列表数据:', pets)
+      console.log('宠物数量:', pets?.length || 0)
+
+      // 打印每个宠物的详细信息
+      if (pets && pets.length > 0) {
+        pets.forEach((pet, index) => {
+          console.log(`宠物 ${index + 1}:`, {
+            id: pet.id,
+            name: pet.name,
+            device_id: pet.device_id,
+            device: pet.device ? '存在' : '不存在',
+            deviceData: pet.device
+          })
+        })
+      }
 
       const devices = pets
         .filter(pet => pet.device)
         .map(pet => {
           console.log('设备数据:', pet.device)
-          // 格式化绑定时间
-          const createdAt = pet.device.created_at
+          // 格式化绑定时间 - TypeORM 返回 camelCase
+          const createdAt = pet.device.createdAt
           let bindTime = '未知'
           if (createdAt) {
             const date = new Date(createdAt)
@@ -70,9 +84,9 @@ Page({
 
           return {
             id: pet.device.id,
-            imei: pet.device.device_sn,
+            imei: pet.device.deviceSn,
             petName: pet.name,
-            battery: pet.device.battery_level || 0,
+            battery: pet.device.batteryLevel || 0,
             bindTime: bindTime
           }
         })

@@ -11,7 +11,7 @@
  Target Server Version : 50721 (5.7.21-log)
  File Encoding         : 65001
 
- Date: 20/01/2026 11:36:36
+ Date: 21/01/2026 06:06:00
 */
 
 SET NAMES utf8mb4;
@@ -165,12 +165,13 @@ CREATE TABLE `devices`  (
   UNIQUE INDEX `pet_id`(`pet_id`) USING BTREE,
   INDEX `idx_device_sn`(`device_sn`) USING BTREE,
   CONSTRAINT `devices_ibfk_1` FOREIGN KEY (`pet_id`) REFERENCES `pets` (`id`) ON DELETE SET NULL ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of devices
 -- ----------------------------
-INSERT INTO `devices` VALUES (8, '860678079254725', 8, 100, 0, '2026-01-19 19:08:35', '2026-01-19 19:08:35', '2026-01-19 19:08:35', 0, 0, 0, NULL);
+INSERT INTO `devices` VALUES (8, '860678079254725', NULL, 100, 0, '2026-01-19 19:08:35', '2026-01-19 19:08:35', '2026-01-19 19:08:35', 0, 0, 0, NULL);
+INSERT INTO `devices` VALUES (9, '860678079254720', 9, 100, 0, '2026-01-21 06:03:37', '2026-01-21 06:03:37', '2026-01-21 06:03:37', 0, 0, 0, NULL);
 
 -- ----------------------------
 -- Table structure for growth_logs
@@ -192,9 +193,6 @@ CREATE TABLE `growth_logs`  (
 -- ----------------------------
 -- Records of growth_logs
 -- ----------------------------
-INSERT INTO `growth_logs` VALUES (2, 9, 'milestone', 'API Test Log', 'Created via API test', NULL, '2026-01-20 05:00:11');
-INSERT INTO `growth_logs` VALUES (3, 8, 'milestone', 'QwQ我去我去', '请问请问', NULL, '2026-01-20 05:03:38');
-INSERT INTO `growth_logs` VALUES (4, 8, 'activity', '2121221', '1212121212', NULL, '2026-01-20 05:41:12');
 
 -- ----------------------------
 -- Table structure for health_records
@@ -306,7 +304,7 @@ CREATE TABLE `moments`  (
 -- ----------------------------
 -- Records of moments
 -- ----------------------------
-INSERT INTO `moments` VALUES (3, 18, 8, '11111', '[\"http://localhost:3003/uploads/1768821242646-157863045.png\"]', 1, 1, 0, '2026-01-19 19:14:02', '2026-01-19 19:14:15');
+INSERT INTO `moments` VALUES (3, 18, NULL, '11111', '[\"http://localhost:3003/uploads/1768821242646-157863045.png\"]', 1, 1, 0, '2026-01-19 19:14:02', '2026-01-19 19:14:15');
 
 -- ----------------------------
 -- Table structure for pets
@@ -333,12 +331,7 @@ CREATE TABLE `pets`  (
 -- ----------------------------
 -- Records of pets
 -- ----------------------------
-INSERT INTO `pets` VALUES (4, 18, '金猫', '', '金毛', NULL, 'male', NULL, 5, '2026-01-19 19:02:03', '2026-01-19 19:02:03');
-INSERT INTO `pets` VALUES (5, 18, '金毛1', 'http://localhost:3003/uploads/1768820633043-99487028.jpg', '金毛1', NULL, 'male', NULL, NULL, '2026-01-19 19:04:10', '2026-01-19 19:04:10');
-INSERT INTO `pets` VALUES (6, 18, '金毛1', 'http://localhost:3003/uploads/1768820633043-99487028.jpg', '金毛1', NULL, 'male', NULL, 6, '2026-01-19 19:05:01', '2026-01-19 19:05:01');
-INSERT INTO `pets` VALUES (7, 18, '金毛1', 'http://localhost:3003/uploads/1768820633043-99487028.jpg', '金毛1', NULL, 'male', NULL, 7, '2026-01-19 19:07:40', '2026-01-19 19:07:40');
-INSERT INTO `pets` VALUES (8, 18, '张飞', 'http://localhost:3003/uploads/1768820903276-610879255.jpg', '金毛', NULL, 'male', NULL, 8, '2026-01-19 19:08:35', '2026-01-19 19:08:35');
-INSERT INTO `pets` VALUES (9, 19, 'Test Pet', NULL, 'Golden', NULL, 'male', NULL, NULL, '2026-01-20 04:20:08', '2026-01-20 04:20:08');
+INSERT INTO `pets` VALUES (9, 18, '张飞', 'http://localhost:3003/uploads/1768946526179-278136894.jpg', '金毛', NULL, 'male', NULL, 9, '2026-01-21 06:03:37', '2026-01-21 06:03:37');
 
 -- ----------------------------
 -- Table structure for users

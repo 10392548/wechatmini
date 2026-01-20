@@ -17,66 +17,58 @@
     </view>
   </view>
 
-  <!-- 今日数据 -->
+  <!-- 今日运动 -->
   <view class="section-card" bindtap="goToActivity">
     <view class="section-header">
-      <text class="section-title">今日数据</text>
+      <text class="section-title">今日运动</text>
       <text class="section-more">查看详情 ></text>
     </view>
-    <view class="stats-row">
-      <view class="stat-item">
-        <text class="stat-value">{{todayStats.calories}}</text>
-        <text class="stat-unit">kcal</text>
-        <text class="stat-label">消耗热量</text>
+    <view class="activity-stats">
+      <view class="activity-item orange">
+        <image class="activity-icon-img" src="/images/Running.png" mode="aspectFit"></image>
+        <text class="activity-label">奔跑</text>
+        <text class="activity-value">{{todayStats.runningTime}}</text>
+        <text class="activity-unit">分钟</text>
       </view>
-      <view class="stat-divider"></view>
-      <view class="stat-item">
-        <text class="stat-value">{{todayStats.activeTime}}</text>
-        <text class="stat-unit">小时</text>
-        <text class="stat-label">活跃时间</text>
+      <view class="activity-item blue">
+        <image class="activity-icon-img" src="/images/Walking.png" mode="aspectFit"></image>
+        <text class="activity-label">行走</text>
+        <text class="activity-value">{{todayStats.walkingTime}}</text>
+        <text class="activity-unit">分钟</text>
       </view>
-      <view class="stat-divider"></view>
-      <view class="stat-item">
-        <text class="stat-value">{{todayStats.steps}}</text>
-        <text class="stat-unit">步</text>
-        <text class="stat-label">行走步数</text>
+      <view class="activity-item green">
+        <image class="activity-icon-img" src="/images/Still.png" mode="aspectFit"></image>
+        <text class="activity-label">静止</text>
+        <text class="activity-value">{{todayStats.staticTime}}</text>
+        <text class="activity-unit">分钟</text>
       </view>
     </view>
   </view>
 
-  <!-- 电池状态 -->
+  <!-- 设备状态 -->
   <view class="section-card" bindtap="goToBattery">
     <view class="section-header">
-      <text class="section-title">电池状态</text>
+      <text class="section-title">设备状态</text>
       <text class="section-more">查看详情 ></text>
     </view>
-    <view class="battery-card">
-      <view class="battery-main">
-        <text class="battery-emoji">🔋</text>
-        <view class="battery-progress-wrapper">
-          <view class="battery-progress-bar">
-            <view class="battery-progress-fill" style="width: {{pet.battery}}%"></view>
-          </view>
-          <view class="battery-labels">
-            <text class="battery-percent-text">{{pet.battery}}%</text>
-            <text class="battery-estimate">预计续航 {{batteryEstimate}} 天</text>
-          </view>
+    <view class="device-status">
+      <view class="device-status-main">
+        <view class="device-online {{isOnline ? 'online' : 'offline'}}">
+          <view class="online-dot"></view>
+        </view>
+        <view class="device-info">
+          <text class="device-status-text">{{isOnline ? '在线' : '离线'}}</text>
+          <text class="device-last-online">最后在线: {{lastOnlineTime}}</text>
         </view>
       </view>
-      <view class="power-usage">
-        <view class="usage-row">
-          <text class="usage-name">GPS定位</text>
-          <view class="usage-bar">
-            <view class="usage-fill blue" style="width: 65%"></view>
-          </view>
-          <text class="usage-percent">65%</text>
+      <view class="device-current">
+        <view class="current-item">
+          <image class="current-icon-img" src="/images/{{currentStatus.icon}}.png" mode="aspectFit"></image>
+          <text class="current-text">{{currentStatus.text}}</text>
         </view>
-        <view class="usage-row">
-          <text class="usage-name">传感器</text>
-          <view class="usage-bar">
-            <view class="usage-fill orange" style="width: 20%"></view>
-          </view>
-          <text class="usage-percent">20%</text>
+        <view class="current-item temperature">
+          <text class="temp-label">温度</text>
+          <text class="temp-value">{{temperature}}°C</text>
         </view>
       </view>
     </view>
@@ -146,5 +138,5 @@
   </view>
 
   <!-- 底部间距 -->
-  <view style="height: 40rpx;"></view>
+  <view style="height: 40rpx"></view>
 </scroll-view>

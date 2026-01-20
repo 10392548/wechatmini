@@ -99,122 +99,137 @@ page {
   color: #999;
 }
 
-/* 今日数据 */
-.stats-row {
+/* 今日运动 */
+.activity-stats {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.activity-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24rpx 16rpx;
+  border-radius: 16rpx;
+  margin: 0 4rpx;
+}
+.activity-item.orange {
+  background: #FFF3E0;
+}
+.activity-item.blue {
+  background: #E3F2FD;
+}
+.activity-item.green {
+  background: #E8F5E9;
+}
+.activity-icon-img {
+  width: 56rpx;
+  height: 56rpx;
+  margin-bottom: 12rpx;
+}
+.activity-label {
+  font-size: 24rpx;
+  color: #666;
+  margin-bottom: 8rpx;
+}
+.activity-value {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 4rpx;
+}
+.activity-unit {
+  font-size: 20rpx;
+  color: #999;
+}
+
+/* 设备状态 */
+.device-status {
+  background: #f9f9f9;
+  border-radius: 16rpx;
+  padding: 20rpx 24rpx;
+}
+.device-status-main {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+.device-online {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 16rpx;
+  position: relative;
+}
+.device-online.online {
+  background: #E8F5E9;
+}
+.device-online.offline {
+  background: #FFEBEE;
+}
+.online-dot {
+  width: 32rpx;
+  height: 32rpx;
+  border-radius: 50%;
+  background: #4CAF50;
+}
+.device-online.offline .online-dot {
+  background: #9E9E9E;
+}
+.device-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.device-status-text {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 4rpx;
+}
+.device-last-online {
+  font-size: 22rpx;
+  color: #999;
+}
+.device-current {
   display: flex;
   align-items: center;
   justify-content: space-around;
+  padding: 16rpx 0;
+  background: #fff;
+  border-radius: 12rpx;
 }
-.stat-item {
+.current-item {
   display: flex;
   flex-direction: column;
   align-items: center;
   flex: 1;
 }
-.stat-value {
-  font-size: 44rpx;
-  font-weight: bold;
-  color: #FF8C00;
+.current-icon-img {
+  width: 40rpx;
+  height: 40rpx;
+  margin-bottom: 8rpx;
 }
-.stat-unit {
+.current-text {
+  font-size: 24rpx;
+  color: #666;
+}
+.current-item.temperature {
+  border-left: 1rpx solid #eee;
+}
+.temp-label {
   font-size: 22rpx;
   color: #999;
-  margin-top: 4rpx;
+  margin-bottom: 4rpx;
 }
-.stat-label {
-  font-size: 24rpx;
-  color: #666;
-  margin-top: 8rpx;
-}
-.stat-divider {
-  width: 1rpx;
-  height: 60rpx;
-  background: #eee;
-}
-
-/* 电池状态 */
-.battery-card {
-  background: #f9f9f9;
-  border-radius: 16rpx;
-  padding: 24rpx;
-}
-.battery-main {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20rpx;
-}
-.battery-emoji {
-  font-size: 48rpx;
-  margin-right: 20rpx;
-}
-.battery-progress-wrapper {
-  flex: 1;
-}
-.battery-progress-bar {
-  height: 20rpx;
-  background: #e0e0e0;
-  border-radius: 10rpx;
-  overflow: hidden;
-}
-.battery-progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #4CAF50, #8BC34A);
-  border-radius: 10rpx;
-}
-.battery-labels {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 8rpx;
-}
-.battery-percent-text {
+.temp-value {
   font-size: 28rpx;
   font-weight: bold;
-  color: #4CAF50;
-}
-.battery-estimate {
-  font-size: 24rpx;
-  color: #999;
-}
-.power-usage {
-  border-top: 1rpx solid #eee;
-  padding-top: 16rpx;
-}
-.usage-row {
-  display: flex;
-  align-items: center;
-  margin-bottom: 12rpx;
-}
-.usage-row:last-child {
-  margin-bottom: 0;
-}
-.usage-name {
-  font-size: 24rpx;
-  color: #666;
-  width: 120rpx;
-}
-.usage-bar {
-  flex: 1;
-  height: 12rpx;
-  background: #e0e0e0;
-  border-radius: 6rpx;
-  margin: 0 16rpx;
-  overflow: hidden;
-}
-.usage-fill {
-  height: 100%;
-  border-radius: 6rpx;
-}
-.usage-fill.blue {
-  background: #2196F3;
-}
-.usage-fill.orange {
-  background: #FF9800;
-}
-.usage-percent {
-  font-size: 24rpx;
-  color: #999;
-  width: 60rpx;
-  text-align: right;
+  color: #333;
 }
 
 /* 快捷功能 */

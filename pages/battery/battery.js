@@ -87,10 +87,10 @@ Page({
         const device = currentPet.device
 
         // 设置在线状态
-        const isOnline = device.is_online || false
+        const isOnline = device.isOnline || false
         this.setData({
           isOnline: isOnline,
-          lastOnlineTime: this.formatLastOnline(device.last_online_at)
+          lastOnlineTime: this.formatLastOnline(device.lastOnlineAt)
         })
 
         // 只有在线时才生成电量数据

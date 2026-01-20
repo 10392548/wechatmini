@@ -1,19 +1,25 @@
 // 文件日志工具
 const fs = wx.getFileSystemManager()
-const logPath = `${wx.env.USER_DATA_PATH}/debug.log`
+let logPath = `${wx.env.USER_DATA_PATH}/debug.log`
+
+// 检查路径是否有效（开发者工具可能返回无效路径如 http://usr）
+const isPathValid = logPath && !logPath.startsWith('http') && !logPath.includes('://')
 
 function writeLog(message) {
+  // 输出到控制台
+  console.log(message)
+
+  // 只在路径有效时尝试写入文件
+  if (!isPathValid) {
+    return
+  }
+
   try {
     const timestamp = new Date().toISOString()
     const logMessage = `[${timestamp}] ${message}\n`
-
-    // 追加写入日志
     fs.appendFileSync(logPath, logMessage, 'utf8')
-
-    // 同时输出到控制台
-    console.log(message)
   } catch (error) {
-    console.error('[文件日志] 写入失败:', error)
+    // 静默处理文件写入失败
   }
 }
 
