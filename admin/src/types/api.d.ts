@@ -78,6 +78,9 @@ export interface Device {
   pet?: Pet
 }
 
+// 审核状态类型
+export type AuditStatus = 'pending' | 'approved' | 'rejected'
+
 // 朋友圈类型
 export interface Moment {
   id: number
@@ -88,10 +91,15 @@ export interface Moment {
   is_public: boolean
   likeCount: number
   commentCount: number
+  status?: AuditStatus
+  reviewed_by_id?: number
+  reviewed_at?: string
+  rejection_reason?: string
   created_at: string
   updated_at: string
   user?: User
   pet?: Pet
+  reviewed_by?: AdminInfo
 }
 
 // 统计数据类型

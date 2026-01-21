@@ -52,7 +52,7 @@ export default function LayoutPage() {
     <Layout className="layout-container">
       <Sider width={240} theme="light" className="layout-sider">
         <div className="layout-logo">
-          <img src="/vite.svg" alt="logo" />
+          <img src="/favicon.png" alt="logo" />
           <span>宠物项圈管理</span>
         </div>
         <Menu

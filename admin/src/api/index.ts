@@ -76,6 +76,14 @@ export const momentApi = {
   getList: (params: { page: number; pageSize: number; status?: string }) =>
     request.get<PaginatedResponse<Moment>>('/admin/moments', { params }),
 
+  // 审核通过
+  approve: (id: number) =>
+    request.put(`/admin/moments/${id}/approve`),
+
+  // 审核驳回
+  reject: (id: number, reason?: string) =>
+    request.put(`/admin/moments/${id}/reject`, { reason }),
+
   // 删除朋友圈
   delete: (id: number) =>
     request.delete(`/admin/moments/${id}`),
