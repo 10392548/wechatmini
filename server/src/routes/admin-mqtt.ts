@@ -35,42 +35,42 @@ router.get('/stats', adminAuthMiddleware, async (req: AdminAuthRequest, res) => 
   }
 });
 
-// 设备日志
+// 设备数据日志（显示接收到的 MQTT 消息）
 router.get('/logs', adminAuthMiddleware, async (req: AdminAuthRequest, res) => {
   try {
     const { page = 1, pageSize = 20, deviceSn } = req.query;
     const pageNum = Number(page);
     const sizeNum = Number(pageSize);
 
-    const deviceCommandRepo = AppDataSource.getRepository(DeviceCommand);
+    const deviceDataLogRepo = AppDataSource.getRepository(DeviceDataLog);
 
-    const queryBuilder = deviceCommandRepo.createQueryBuilder('command')
-      .leftJoin('command.device', 'device');
+    const queryBuilder = deviceDataLogRepo.createQueryBuilder('log');
 
-    if (deviceSn) {
-      queryBuilder.andWhere('device.deviceSn = :deviceSn', { deviceSn });
+    if (deviceSn && typeof deviceSn === 'string') {
+      queryBuilder.andWhere('log.deviceSn = :deviceSn', { deviceSn });
     }
 
-    const [commands, total] = await queryBuilder
-      .orderBy('command.createdAt', 'DESC')
+    const [logs, total] = await queryBuilder
+      .orderBy('log.receivedAt', 'DESC')
       .skip((pageNum - 1) * sizeNum)
       .take(sizeNum)
       .getManyAndCount();
 
-    const logs = commands.map((cmd: any) => ({
-      timestamp: cmd.createdAt,
-      deviceId: cmd.deviceId,
-      deviceSn: cmd.device?.deviceSn || 'Unknown',
-      type: cmd.commandType,
-      message: cmd.payload ? JSON.stringify(cmd.payload) : '',
-      status: cmd.status,
+    // 映射为前端期望的数据格式
+    const formattedLogs = logs.map((log) => ({
+      timestamp: log.receivedAt,
+      deviceId: log.deviceId,
+      deviceSn: log.deviceSn,
+      type: 'data',
+      message: JSON.stringify(log.rawData),
+      status: 'success',
     }));
 
     res.json({
       code: 0,
       message: 'Success',
       data: {
-        list: logs,
+        list: formattedLogs,
         total,
         page: pageNum,
         pageSize: sizeNum,

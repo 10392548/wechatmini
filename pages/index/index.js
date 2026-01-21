@@ -81,9 +81,8 @@ Page({
         })
       }
 
-      // 加载今日运动统计数据（暂时用虚拟数据）
-      // TODO: 从服务器获取真实的运动时长统计
-      this.generateTodayStats()
+      // 加载今日运动统计数据
+      await this.loadTodayStats()
 
       // 加载成长日志
       const logs = await api.pet.getGrowthLogs(currentPet.id, 3)
@@ -95,7 +94,6 @@ Page({
             id: log.id,
             image: config.image,
             bgColor: config.bgColor,
-            time: new Date(log.createdAt).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' }),
             title: log.title,
             description: log.content
           }
@@ -123,44 +121,99 @@ Page({
     }
   },
 
-  // 生成今日运动统计（虚拟数据，等待服务器接口）
-  generateTodayStats() {
-    // 根据时间生成合理的运动时长
-    const hour = new Date().getHours()
+  // 加载今日运动统计（真实数据）
+  async loadTodayStats() {
+    // 从 globalData 获取设备信息（不是从 this.data.pet）
+    const app = getApp()
+    const currentPet = app.globalData?.currentPet
 
-    let runningTime = 0
-    let walkingTime = 0
-    let staticTime = 0
+    // 检查 device_id 或 device.id
+    const deviceId = currentPet?.device?.id || currentPet?.device_id
 
-    if (hour >= 6 && hour < 12) {
-      // 上午：活动较多
-      runningTime = 30 + Math.floor(Math.random() * 20)
-      walkingTime = 40 + Math.floor(Math.random() * 30)
-      staticTime = (12 - hour) * 30
-    } else if (hour >= 12 && hour < 18) {
-      // 下午：午休后活动
-      runningTime = 20 + Math.floor(Math.random() * 15)
-      walkingTime = 30 + Math.floor(Math.random() * 20)
-      staticTime = (18 - hour) * 20
-    } else if (hour >= 18 && hour < 22) {
-      // 晚上：活动减少
-      runningTime = 10 + Math.floor(Math.random() * 10)
-      walkingTime = 20 + Math.floor(Math.random() * 15)
-      staticTime = (22 - hour) * 30
-    } else {
-      // 深夜/凌晨：基本静止
-      runningTime = 0
-      walkingTime = 0
-      staticTime = 60
+    if (!deviceId) {
+      // 没有设备，显示全0
+      this.setData({
+        todayStats: {
+          runningTime: '0',
+          walkingTime: '0',
+          staticTime: '0'
+        }
+      })
+      return
     }
 
-    this.setData({
-      todayStats: {
-        runningTime: runningTime.toString(),
-        walkingTime: walkingTime.toString(),
-        staticTime: staticTime.toString()
+    try {
+      // 获取今日轨迹数据
+      const trackData = await api.device.getTodayTrack(deviceId)
+
+      if (trackData && trackData.length > 0) {
+        // 计算各运动状态时长
+        let runningTime = 0
+        let walkingTime = 0
+        let staticTime = 0
+
+        for (let i = 0; i < trackData.length - 1; i++) {
+          const timeDiff = (new Date(trackData[i + 1].recordedAt) - new Date(trackData[i].recordedAt)) / 60000
+
+          switch (trackData[i].motionState || 0) {
+            case 0:
+              staticTime += timeDiff
+              break
+            case 1:
+              walkingTime += timeDiff
+              break
+            case 2:
+              runningTime += timeDiff
+              break
+          }
+        }
+
+        this.setData({
+          todayStats: {
+            runningTime: Math.round(runningTime).toString(),
+            walkingTime: Math.round(walkingTime).toString(),
+            staticTime: Math.round(staticTime).toString()
+          }
+        })
+
+        // 更新当前状态
+        const lastPoint = trackData[trackData.length - 1]
+        const statusMap = {
+          0: { icon: 'Still', text: '静止' },
+          1: { icon: 'Walking', text: '行走' },
+          2: { icon: 'Running', text: '奔跑' }
+        }
+        this.setData({
+          currentStatus: statusMap[lastPoint.motionState || 0]
+        })
+
+        // 更新温度
+        if (lastPoint.temperature) {
+          this.setData({
+            temperature: parseFloat(lastPoint.temperature).toFixed(1)
+          })
+        }
+      } else {
+        // 无数据时显示全0
+        this.setData({
+          todayStats: {
+            runningTime: '0',
+            walkingTime: '0',
+            staticTime: '0'
+          }
+        })
       }
-    })
+    } catch (error) {
+      console.error('加载今日统计失败:', error)
+      // 失败时显示全0
+      this.setData({
+        todayStats: {
+          runningTime: '0',
+          walkingTime: '0',
+          staticTime: '0'
+        }
+      })
+    }
   },
 
   formatLastOnline(lastOnlineAt) {

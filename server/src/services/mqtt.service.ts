@@ -122,8 +122,8 @@ export class MQTTService {
       const deviceSn = data.ID || data.deviceId;
       console.log(`[MQTT] 收到消息: method=${data.method}, device=${deviceSn}`);
 
-      // 只处理设备属性上报
-      if (data.method === 'thing.event.property.post') {
+      // 处理设备数据上报（包括 method 为 undefined 的情况）
+      if (!data.method || data.method === 'thing.event.property.post') {
         await this.handleDeviceData(data);
       }
     } catch (error) {

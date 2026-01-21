@@ -1,3 +1,5 @@
+const api = require('../../api/index')
+
 Page({
   data: {
     // 地图相关数据
@@ -16,10 +18,12 @@ Page({
       icon: '🏃',
       text: '奔跑'
     },
-    runningTime: 40,       // 奔腾时长（分钟）
-    walkingTime: 35,       // 行走时长（分钟）
-    staticTime: 120,       // 静止时长（分钟）
-    activityDetails: []    // 活动详情列表
+    runningTime: 0,        // 奔腾时长（分钟）
+    walkingTime: 0,        // 行走时长（分钟）
+    staticTime: 0,         // 静止时长（分钟）
+    activityDetails: [],   // 活动详情列表
+    loading: true,         // 加载状态
+    hasData: false         // 是否有数据
   },
 
   onLoad() {
@@ -43,129 +47,91 @@ Page({
           longitude: res.longitude,
           latitude: res.latitude
         });
-        this.addCurrentLocationMarker(res.longitude, res.latitude);
       },
       fail: (err) => {
         console.error('获取位置失败:', err);
-        wx.showToast({
-          title: '请授权位置信息',
-          icon: 'none'
-        });
       }
-    });
-  },
-
-  // 添加当前位置标记
-  addCurrentLocationMarker(longitude, latitude) {
-    const currentMarker = {
-      id: 0,
-      longitude: longitude,
-      latitude: latitude,
-      iconPath: '/images/pet-marker.png',
-      width: 40,
-      height: 40,
-      title: '当前位置',
-      callout: {
-        content: '宠物当前位置',
-        color: '#ffffff',
-        fontSize: 12,
-        borderRadius: 8,
-        bgColor: '#4A90E2',
-        padding: 8,
-        display: 'ALWAYS'
-      }
-    };
-
-    this.setData({
-      markers: [currentMarker, ...this.data.markers]
     });
   },
 
   // 加载运动轨迹数据
   loadTrackData() {
-    // 生成虚拟轨迹数据
-    const mockTrackPoints = this.generateMockTrack();
+    this.setData({ loading: true });
 
-    this.setData({
-      trackPoints: mockTrackPoints
-    });
+    // 获取当前选中的设备
+    const app = getApp();
+    const currentPet = app.globalData?.currentPet;
 
-    this.drawTrackLine(mockTrackPoints);
-    this.addTrackMarkers(mockTrackPoints);
-    this.calculateDistance(mockTrackPoints);
-    this.calculateActivityStats(mockTrackPoints);
-    this.generateActivityDetails(mockTrackPoints);
-  },
-
-  // 生成虚拟轨迹数据
-  generateMockTrack() {
-    const baseLatitude = this.data.latitude;
-    const baseLongitude = this.data.longitude;
-    const points = [];
-
-    // 模拟一天的运动轨迹，每5分钟一个点，共72个点（6小时）
-    const now = Date.now();
-
-    for (let i = 0; i < 72; i++) {
-      // 模拟不同的运动状态
-      let motionstate;
-      let speed;
-
-      if (i < 8) {
-        // 前40分钟：奔跑
-        motionstate = 2;
-        speed = 6 + Math.random() * 3; // 6-9 km/h
-      } else if (i < 15) {
-        // 接下来35分钟：行走
-        motionstate = 1;
-        speed = 3 + Math.random() * 2; // 3-5 km/h
-      } else if (i < 39) {
-        // 接下来2小时：静止
-        motionstate = 0;
-        speed = 0;
-      } else if (i < 46) {
-        // 接下来35分钟：行走
-        motionstate = 1;
-        speed = 3 + Math.random() * 2;
-      } else {
-        // 最后部分：静止
-        motionstate = 0;
-        speed = 0;
-      }
-
-      // 根据运动状态生成位移
-      let latOffset = 0;
-      let lonOffset = 0;
-
-      if (motionstate !== 0) {
-        latOffset = (Math.random() - 0.5) * 0.002;
-        lonOffset = (Math.random() - 0.5) * 0.002;
-      }
-
-      points.push({
-        latitude: baseLatitude + latOffset,
-        longitude: baseLongitude + lonOffset,
-        timestamp: now - (72 - i) * 5 * 60000, // 每5分钟一个点
-        speed: speed,
-        motionstate: motionstate,
-        temperature: 38 + Math.random() * 2 // 38-40°C
+    if (!currentPet || !currentPet.device_id) {
+      this.setData({ loading: false });
+      wx.showToast({
+        title: '请先绑定设备',
+        icon: 'none'
       });
+      return;
     }
 
-    // 设置当前状态为最后一个点的状态
-    const lastPoint = points[points.length - 1];
-    const statusMap = {
-      0: { icon: 'Still', text: '静止' },
-      1: { icon: 'Walking', text: '行走' },
-      2: { icon: 'Running', text: '奔跑' }
-    };
+    const deviceId = currentPet.device_id;
 
-    this.setData({
-      currentStatus: statusMap[lastPoint.motionstate],
-      temperature: lastPoint.temperature.toFixed(1)
+    // 调用真实 API 获取今日轨迹
+    api.device.getTodayTrack(deviceId).then(res => {
+      this.setData({ loading: false });
+
+      // res 已经是数据数组（request.js 只返回 data 部分）
+      if (res && res.length > 0) {
+        // 数据格式转换
+        const trackPoints = res.map(loc => ({
+          latitude: parseFloat(loc.latitude),
+          longitude: parseFloat(loc.longitude),
+          timestamp: new Date(loc.recordedAt).getTime(),
+          motionstate: loc.motionState || 0,
+          temperature: parseFloat(loc.temperature) || 0
+        }));
+
+        // 按时间排序
+        trackPoints.sort((a, b) => a.timestamp - b.timestamp);
+
+        this.setData({
+          trackPoints: trackPoints,
+          hasData: true
+        });
+
+        // 更新地图中心到第一个点
+        if (trackPoints.length > 0) {
+          this.setData({
+            longitude: trackPoints[0].longitude,
+            latitude: trackPoints[0].latitude
+          });
+        }
+
+        this.drawTrackLine(trackPoints);
+        this.addTrackMarkers(trackPoints);
+        this.calculateDistance(trackPoints);
+        this.calculateActivityStats(trackPoints);
+        this.generateActivityDetails(trackPoints);
+
+        wx.showToast({
+          title: `加载${trackPoints.length}个轨迹点`,
+          icon: 'none'
+        });
+      } else {
+        this.setData({
+          hasData: false,
+          trackPoints: []
+        });
+        wx.showToast({
+          title: '今日暂无轨迹数据',
+          icon: 'none'
+        });
+      }
+    }).catch(err => {
+      this.setData({ loading: false });
+      console.error('加载轨迹失败:', err);
+      wx.showToast({
+        title: '加载失败，请重试',
+        icon: 'none'
+      });
     });
-
-    return points;
   },
 
   // 绘制运动轨迹路线
@@ -230,7 +196,7 @@ Page({
   addTrackMarkers(points) {
     if (points.length === 0) return;
 
-    const markers = [...this.data.markers];
+    const markers = [];
 
     // 起点标记
     markers.push({
@@ -297,7 +263,9 @@ Page({
     }
 
     // 计算运动时长（分钟）
-    const duration = Math.round((points[points.length - 1].timestamp - points[0].timestamp) / 60000);
+    const duration = points.length > 1
+      ? Math.round((points[points.length - 1].timestamp - points[0].timestamp) / 60000)
+      : 0;
 
     this.setData({
       distance: totalDistance.toFixed(2),
@@ -327,15 +295,27 @@ Page({
       }
     }
 
+    // 更新当前状态显示
+    const lastPoint = points[points.length - 1];
+    const statusMap = {
+      0: { icon: 'Still', text: '静止' },
+      1: { icon: 'Walking', text: '行走' },
+      2: { icon: 'Running', text: '奔跑' }
+    };
+
     this.setData({
       runningTime: Math.round(runningTime),
       walkingTime: Math.round(walkingTime),
-      staticTime: Math.round(staticTime)
+      staticTime: Math.round(staticTime),
+      currentStatus: statusMap[lastPoint.motionstate] || { icon: 'Still', text: '静止' },
+      temperature: lastPoint.temperature > 0 ? lastPoint.temperature.toFixed(1) : '--'
     });
   },
 
   // 生成活动详情列表
   generateActivityDetails(points) {
+    if (points.length === 0) return;
+
     const details = [];
     let currentActivity = null;
     let activityStart = null;
@@ -349,7 +329,7 @@ Page({
       const point = points[i];
 
       if (currentActivity !== point.motionstate) {
-        // 结束上一个活动
+        // 结束上一个活动并生成记录
         if (currentActivity !== null && activityStart !== null) {
           const duration = Math.round((point.timestamp - activityStart) / 60000);
 
@@ -373,6 +353,28 @@ Page({
         // 开始新活动
         currentActivity = point.motionstate;
         activityStart = point.timestamp;
+      }
+    }
+
+    // 循环结束后，生成最后一个活动的记录
+    if (currentActivity !== null && activityStart !== null) {
+      const lastPoint = points[points.length - 1];
+      const duration = Math.round((lastPoint.timestamp - activityStart) / 60000);
+
+      if (duration > 0) {
+        const activityMap = {
+          0: { name: '静止', icon: 'Still', colorClass: 'yellow', bgColor: '#E8F5E9' },
+          1: { name: '行走', icon: 'Walking', colorClass: 'blue', bgColor: '#E3F2FD' },
+          2: { name: '奔跑', icon: 'Running', colorClass: 'green', bgColor: '#FFF3E0' }
+        };
+
+        details.push({
+          name: activityMap[currentActivity].name,
+          icon: activityMap[currentActivity].icon,
+          colorClass: activityMap[currentActivity].colorClass,
+          time: `${formatTime(activityStart)} - ${formatTime(lastPoint.timestamp)}`,
+          duration: `${duration}分钟`
+        });
       }
     }
 
@@ -415,12 +417,19 @@ Page({
     });
 
     // 重新绘制轨迹
-    this.drawTrackLine(this.data.trackPoints);
+    if (this.data.trackPoints && this.data.trackPoints.length > 0) {
+      this.drawTrackLine(this.data.trackPoints);
+    }
 
     wx.showToast({
       title: showHeatmap ? '状态图已开启' : '状态图已关闭',
       icon: 'none'
     });
+  },
+
+  // 刷新数据
+  refreshData() {
+    this.loadTrackData();
   },
 
   goBack() {
