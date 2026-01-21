@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { AppDataSource } from '../index';
-import { Moment } from '../entities/Moment';
+import { Moment, AuditStatus } from '../entities/Moment';
 import { MomentLike } from '../entities/MomentLike';
 import { MomentComment } from '../entities/MomentComment';
 import { authMiddleware, AuthRequest } from '../middleware/auth';
@@ -8,13 +8,14 @@ import { upload } from '../middleware/upload';
 
 const router = Router();
 
-// 获取朋友圈列表
+// 获取朋友圈列表（只返回已审核通过的内容）
 router.get('/', authMiddleware, async (req: AuthRequest, res) => {
   try {
     const { page = 1, limit = 20 } = req.query;
 
     const momentRepo = AppDataSource.getRepository(Moment);
     const [moments, total] = await momentRepo.findAndCount({
+      where: { status: AuditStatus.APPROVED },
       relations: ['user', 'pet'],
       order: { created_at: 'DESC' },
       skip: (Number(page) - 1) * Number(limit),

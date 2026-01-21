@@ -20,7 +20,10 @@
       "Skill(feature-dev:feature-dev)",
       "Skill(frontend-design:frontend-design)",
       "Bash(powershell:*)",
-      "Bash(git reset:*)"
+      "Bash(git reset:*)",
+      "Bash(gh pr list:*)",
+      "Bash(gh auth:*)",
+      "Bash(git branch:*)"
     ]
   }
 }

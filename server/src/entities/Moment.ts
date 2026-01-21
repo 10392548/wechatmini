@@ -3,6 +3,13 @@ import { User } from './User';
 import { Pet } from './Pet';
 import { MomentLike } from './MomentLike';
 import { MomentComment } from './MomentComment';
+import { Admin } from './Admin';
+
+export enum AuditStatus {
+  PENDING = 'pending',
+  APPROVED = 'approved',
+  REJECTED = 'rejected'
+}
 
 @Entity('moments')
 export class Moment {
@@ -30,6 +37,22 @@ export class Moment {
   @Column({ default: 0 })
   comment_count: number;
 
+  @Column({
+    type: 'enum',
+    enum: AuditStatus,
+    default: AuditStatus.PENDING
+  })
+  status: AuditStatus;
+
+  @Column({ type: 'int', nullable: true })
+  reviewed_by_id: number | null;
+
+  @Column({ type: 'timestamp', nullable: true })
+  reviewed_at: Date | null;
+
+  @Column({ type: 'text', nullable: true })
+  rejection_reason: string | null;
+
   @CreateDateColumn()
   created_at: Date;
 
@@ -49,4 +72,8 @@ export class Moment {
 
   @OneToMany(() => MomentComment, comment => comment.moment)
   comments: MomentComment[];
+
+  @ManyToOne(() => Admin, { nullable: true })
+  @JoinColumn({ name: 'reviewed_by_id' })
+  reviewed_by: Admin | null;
 }

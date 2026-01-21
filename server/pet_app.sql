@@ -11,7 +11,7 @@
  Target Server Version : 50721 (5.7.21-log)
  File Encoding         : 65001
 
- Date: 21/01/2026 06:06:00
+ Date: 21/01/2026 09:52:45
 */
 
 SET NAMES utf8mb4;
@@ -41,6 +41,26 @@ CREATE TABLE `activity_data`  (
 -- ----------------------------
 -- Records of activity_data
 -- ----------------------------
+
+-- ----------------------------
+-- Table structure for admins
+-- ----------------------------
+DROP TABLE IF EXISTS `admins`;
+CREATE TABLE `admins`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password_hash` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `role` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT 'admin',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `username`(`username`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of admins
+-- ----------------------------
+INSERT INTO `admins` VALUES (3, 'admin', '$2b$10$ig4bO3n73K27.LsC6PsXEubmi.x9E3VEcDzH6zgqkn8Z7YTZPFB0q', 'admin', '2026-01-21 08:48:41', '2026-01-21 08:48:41');
 
 -- ----------------------------
 -- Table structure for chat_messages
@@ -188,11 +208,12 @@ CREATE TABLE `growth_logs`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_pet_created`(`pet_id`, `created_at`) USING BTREE,
   CONSTRAINT `growth_logs_ibfk_1` FOREIGN KEY (`pet_id`) REFERENCES `pets` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of growth_logs
 -- ----------------------------
+INSERT INTO `growth_logs` VALUES (5, 9, 'milestone', '第一次出门', '开心', NULL, '2026-01-21 06:11:57');
 
 -- ----------------------------
 -- Table structure for health_records
@@ -228,12 +249,13 @@ CREATE TABLE `health_records`  (
   INDEX `idx_pet_id`(`pet_id`) USING BTREE,
   INDEX `idx_record_type`(`record_type`) USING BTREE,
   INDEX `idx_record_date`(`record_date`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of health_records
 -- ----------------------------
 INSERT INTO `health_records` VALUES (1, 8, 'medication', '狂犬疫苗', NULL, '2026-01-20', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '屁屁', '1片', '每日2次', 30, NULL, NULL, NULL, NULL, 380.00, '生冷少吃', '2026-01-20 06:15:11', '2026-01-20 06:15:11');
+INSERT INTO `health_records` VALUES (2, 9, 'vaccination', '狂犬', NULL, '2026-01-21', NULL, '六连', '2025-06-04', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 300.00, '没了', '2026-01-21 06:12:59', '2026-01-21 06:12:59');
 
 -- ----------------------------
 -- Table structure for moment_comments
@@ -293,18 +315,26 @@ CREATE TABLE `moments`  (
   `comment_count` int(11) NULL DEFAULT 0,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `status` enum('pending','approved','rejected') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT 'pending' COMMENT '审核状态：pending-待审核, approved-已通过, rejected-已驳回',
+  `reviewed_by_id` int(11) NULL DEFAULT NULL COMMENT '审核人ID（外键关联admins表）',
+  `reviewed_at` timestamp NULL DEFAULT NULL COMMENT '审核时间',
+  `rejection_reason` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '驳回原因',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `pet_id`(`pet_id`) USING BTREE,
   INDEX `idx_user_id`(`user_id`) USING BTREE,
   INDEX `idx_created_at`(`created_at`) USING BTREE,
+  INDEX `idx_moments_status`(`status`) USING BTREE,
+  INDEX `idx_moments_reviewed_by`(`reviewed_by_id`) USING BTREE,
+  INDEX `idx_moments_created_status`(`created_at`, `status`) USING BTREE,
   CONSTRAINT `moments_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
-  CONSTRAINT `moments_ibfk_2` FOREIGN KEY (`pet_id`) REFERENCES `pets` (`id`) ON DELETE SET NULL ON UPDATE RESTRICT
+  CONSTRAINT `moments_ibfk_2` FOREIGN KEY (`pet_id`) REFERENCES `pets` (`id`) ON DELETE SET NULL ON UPDATE RESTRICT,
+  CONSTRAINT `fk_moments_reviewed_by` FOREIGN KEY (`reviewed_by_id`) REFERENCES `admins` (`id`) ON DELETE SET NULL ON UPDATE RESTRICT
 ) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of moments
 -- ----------------------------
-INSERT INTO `moments` VALUES (3, 18, NULL, '11111', '[\"http://localhost:3003/uploads/1768821242646-157863045.png\"]', 1, 1, 0, '2026-01-19 19:14:02', '2026-01-19 19:14:15');
+INSERT INTO `moments` VALUES (3, 18, NULL, '11111', '[\"http://localhost:3003/uploads/1768821242646-157863045.png\"]', 1, 1, 0, '2026-01-19 19:14:02', '2026-01-21 09:52:11', 'approved', NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for pets
